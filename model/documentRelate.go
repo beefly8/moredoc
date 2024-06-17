@@ -11,10 +11,10 @@ import (
 
 type DocumentRelate struct {
 	Id                int64      `form:"id" json:"id,omitempty" gorm:"primaryKey;autoIncrement;column:id;comment:;"`
-	DocumentId        int64      `form:"document_id" json:"document_id,omitempty" gorm:"column:document_id;type:bigint(20);size:20;default:0;comment:;index:idx_document_id,unique"`
+	DocumentId        int64      `form:"document_id" json:"document_id,omitempty" gorm:"column:document_id;type:bigint;size:20;default:0;comment:;index:idx_document_id,unique"`
 	RelatedDocumentId string     `form:"related_document_id" json:"related_document_id,omitempty" gorm:"column:related_document_id;type:text;comment:;"`
-	CreatedAt         *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt         *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
+	CreatedAt         *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt         *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
 }
 
 func (DocumentRelate) TableName() string {

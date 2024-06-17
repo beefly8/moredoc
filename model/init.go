@@ -12,6 +12,7 @@ import (
 
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -89,20 +90,31 @@ func NewDBModel(cfg *conf.Database, lg *zap.Logger) (m *DBModel, err error) {
 		sqlLogLevel = logger.Silent
 	}
 
-	db, err = gorm.Open(mysql.New(mysql.Config{
-		DSN:                       cfg.DSN, // DSN data source name
-		DefaultStringSize:         255,     // string 类型字段的默认长度
-		DisableDatetimePrecision:  true,    // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
-		DontSupportRenameIndex:    true,    // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
-		DontSupportRenameColumn:   true,    // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
-		SkipInitializeWithVersion: false,   // 根据当前 MySQL 版本自动配置
-	}), &gorm.Config{
-		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   cfg.Prefix, // 表名前缀，`User`表为`t_users`
-			SingularTable: true,       // 使用单数表名，启用该选项后，`User` 表将是`user`
-		},
-		Logger: logger.Default.LogMode(sqlLogLevel),
-	})
+	if cfg.Driver == "mysql" {
+		db, err = gorm.Open(mysql.New(mysql.Config{
+			DSN:                       cfg.DSN, // DSN data source name
+			DefaultStringSize:         255,     // string 类型字段的默认长度
+			DisableDatetimePrecision:  true,    // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
+			DontSupportRenameIndex:    true,    // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
+			DontSupportRenameColumn:   true,    // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
+			SkipInitializeWithVersion: false,   // 根据当前 MySQL 版本自动配置
+		}), &gorm.Config{
+			NamingStrategy: schema.NamingStrategy{
+				TablePrefix:   cfg.Prefix, // 表名前缀，`User`表为`t_users`
+				SingularTable: true,       // 使用单数表名，启用该选项后，`User` 表将是`user`
+			},
+			Logger: logger.Default.LogMode(sqlLogLevel),
+		})
+	} else if cfg.Driver == "postgresql" {
+		db, err = gorm.Open(postgres.Open(cfg.DSN), &gorm.Config{
+			NamingStrategy: schema.NamingStrategy{
+				TablePrefix:   cfg.Prefix, // 表名前缀，`User`表为`t_users`
+				SingularTable: true,       // 使用单数表名，启用该选项后，`User` 表将是`user`
+			},
+			Logger: logger.Default.LogMode(sqlLogLevel),
+		})
+	}
+
 	if err != nil {
 		m.logger.Error("NewDBModel", zap.Error(err), zap.Any("config", cfg))
 		return
@@ -232,10 +244,18 @@ func (m *DBModel) DB() *gorm.DB {
 }
 
 func (m *DBModel) ShowTables() (tables []string, err error) {
-	err = m.db.Raw("show tables").Scan(&tables).Error
-	if err != nil {
-		m.logger.Error("ShowTables", zap.Error(err))
+	if m.cfg.Driver == "mysql" {
+		err = m.db.Raw("show tables").Scan(&tables).Error
+		if err != nil {
+			m.logger.Error("ShowTables", zap.Error(err))
+		}
+	} else if m.cfg.Driver == "postgresql" {
+		err = m.db.Raw("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'").Scan(&tables).Error
+		if err != nil {
+			m.logger.Error("ShowTables", zap.Error(err))
+		}
 	}
+
 	return
 }
 
@@ -270,10 +290,14 @@ func (m *DBModel) alterTableAfterSyncDB() {
 }
 
 func (m *DBModel) ShowIndexes(table string) (indexes []TableIndex) {
-	sql := "show index from " + table
-	err := m.db.Raw(sql).Find(&indexes).Error
-	if err != nil {
-		m.logger.Error("ShowIndexes", zap.Error(err))
+	if m.cfg.Driver == "mysql" {
+
+		sql := "show index from " + table
+		err := m.db.Raw(sql).Find(&indexes).Error
+		if err != nil {
+			m.logger.Error("ShowIndexes", zap.Error(err))
+		}
+		return
 	}
 	return
 }
@@ -337,9 +361,18 @@ func (m *DBModel) CloseDB() {
 }
 
 func (m *DBModel) showTableColumn(tableName string) (columns []TableColumn, err error) {
-	err = m.db.Raw("SHOW FULL COLUMNS FROM " + tableName).Find(&columns).Error
-	if err != nil {
-		m.logger.Error("ShowTableColumn", zap.Error(err))
+	if m.cfg.Driver == "mysql" {
+		err = m.db.Raw("SHOW FULL COLUMNS FROM " + tableName).Find(&columns).Error
+		if err != nil {
+			m.logger.Error("ShowTableColumn", zap.Error(err))
+		}
+		return
+	} else if m.cfg.Driver == "postgresql" {
+		err = m.db.Raw("SELECT column_name, udt_name as column_type, collation_name, is_nullable,is_identity as key,column_default,is_generated as extra ,is_updatable as privileges ,'NULL' as column_comment FROM information_schema.columns WHERE table_name = '" + tableName + "' AND table_schema = 'public'").Find(&columns).Error
+		if err != nil {
+			m.logger.Error("ShowTableColumn", zap.Error(err))
+		}
+		return
 	}
 	return
 }

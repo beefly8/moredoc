@@ -9,15 +9,15 @@ import (
 
 type Advertisement struct {
 	Id        int64      `form:"id" json:"id,omitempty" gorm:"primaryKey;autoIncrement;column:id;comment:;"`
-	UserId    int64      `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint(20);size:20;default:0;comment:用户ID;"`
+	UserId    int64      `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint;size:20;default:0;comment:用户ID;"`
 	Position  string     `form:"position" json:"position,omitempty" gorm:"column:position;type:varchar(64);size:64;index:idx_position;comment:广告位;"`
-	StartTime *time.Time `form:"start_time" json:"start_time,omitempty" gorm:"column:start_time;type:datetime;comment:开始时间;"`
-	EndTime   *time.Time `form:"end_time" json:"end_time,omitempty" gorm:"column:end_time;type:datetime;comment:截止时间;"`
-	CreatedAt *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
+	StartTime *time.Time `form:"start_time" json:"start_time,omitempty" gorm:"column:start_time;type:timestamp;comment:开始时间;"`
+	EndTime   *time.Time `form:"end_time" json:"end_time,omitempty" gorm:"column:end_time;type:timestamp;comment:截止时间;"`
+	CreatedAt *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
 	Title     string     `form:"title" json:"title,omitempty" gorm:"column:title;type:varchar(255);size:255;comment:广告标题;"`
-	Content   string     `form:"content" json:"content,omitempty" gorm:"column:content;type:longtext;comment:广告内容;"`
-	Enable    bool       `form:"enable" json:"enable,omitempty" gorm:"column:enable;type:tinyint(1);size:1;default:1;comment:是否启用;"`
+	Content   string     `form:"content" json:"content,omitempty" gorm:"column:content;type:text;comment:广告内容;"`
+	Enable    bool       `form:"enable" json:"enable,omitempty" gorm:"column:enable;type:boolean;size:1;default:true;comment:是否启用;"`
 	Remark    string     `form:"remark" json:"remark,omitempty" gorm:"column:remark;type:text;comment:备注;"`
 }
 

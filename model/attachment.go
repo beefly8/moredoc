@@ -35,30 +35,30 @@ var attachmentTypeName = map[int]string{
 type Attachment struct {
 	Id          int64           `form:"id" json:"id,omitempty" gorm:"primaryKey;autoIncrement;column:id;comment:附件 id;"`
 	Hash        string          `form:"hash" json:"hash,omitempty" gorm:"column:hash;type:char(32);size:32;index:hash;comment:文件MD5;"`
-	UserId      int64           `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint(20);default:0;index:user_id;comment:用户 id;"`
-	TypeId      int64           `form:"type_id" json:"type_id,omitempty" gorm:"column:type_id;type:bigint(20);default:0;index:idx_type_id;comment:类型数据ID，对应与用户头像时，则为用户id，对应为文档时，则为文档ID;"`
-	Type        int             `form:"type" json:"type,omitempty" gorm:"column:type;type:smallint(5);default:0;index:idx_type;comment:附件类型(0 未知，1 头像，2 文档，3 文章附件 ...);"`
-	Enable      bool            `form:"enable" json:"enable,omitempty" gorm:"column:enable;type:tinyint(3);default:1;comment:是否合法;"`
+	UserId      int64           `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint;default:0;index:user_id;comment:用户 id;"`
+	TypeId      int64           `form:"type_id" json:"type_id,omitempty" gorm:"column:type_id;type:bigint;default:0;index:idx_type_id;comment:类型数据ID，对应与用户头像时，则为用户id，对应为文档时，则为文档ID;"`
+	Type        int             `form:"type" json:"type,omitempty" gorm:"column:type;type:smallint;default:0;index:idx_type;comment:附件类型(0 未知，1 头像，2 文档，3 文章附件 ...);"`
+	Enable      bool            `form:"enable" json:"enable,omitempty" gorm:"column:enable;type:boolean;default:1;comment:是否合法;"`
 	Path        string          `form:"path" json:"path,omitempty" gorm:"column:path;type:varchar(255);size:255;comment:文件存储路径;"`
 	Name        string          `form:"name" json:"name,omitempty" gorm:"column:name;type:varchar(255);size:255;comment:文件原名称;"`
-	Size        int64           `form:"size" json:"size,omitempty" gorm:"column:size;type:bigint(20);default:0;comment:文件大小;"`
-	Width       int             `form:"width" json:"width,omitempty" gorm:"column:width;type:int(11);default:0;comment:宽度;"`
-	Height      int             `form:"height" json:"height,omitempty" gorm:"column:height;type:int(11);default:0;comment:高度;"`
+	Size        int64           `form:"size" json:"size,omitempty" gorm:"column:size;type:bigint;default:0;comment:文件大小;"`
+	Width       int             `form:"width" json:"width,omitempty" gorm:"column:width;type:integer;default:0;comment:宽度;"`
+	Height      int             `form:"height" json:"height,omitempty" gorm:"column:height;type:integer;default:0;comment:高度;"`
 	Ext         string          `form:"ext" json:"ext,omitempty" gorm:"column:ext;type:varchar(32);size:32;comment:文件类型，如 .pdf 。统一处理成小写;"`
 	Ip          string          `form:"ip" json:"ip,omitempty" gorm:"column:ip;type:varchar(64);size:64;comment:上传文档的用户IP地址;"`
 	Description string          `form:"description" json:"description,omitempty" gorm:"column:description;type:varchar(255);size:255;comment:描述、备注;"`
-	CreatedAt   *time.Time      `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt   *time.Time      `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
-	DeletedAt   *gorm.DeletedAt `form:"deleted_at" json:"deleted_at,omitempty" gorm:"column:deleted_at;type:datetime;comment:删除时间;index:idx_deleted_at"`
+	CreatedAt   *time.Time      `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt   *time.Time      `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
+	DeletedAt   *gorm.DeletedAt `form:"deleted_at" json:"deleted_at,omitempty" gorm:"column:deleted_at;type:timestamp;comment:删除时间;index:idx_deleted_at"`
 }
 
 type AttachmentContent struct {
 	Id          int64      `form:"id" json:"id,omitempty" gorm:"primaryKey;autoIncrement;column:id;comment:自增ID;"`
 	Hash        string     `form:"hash" json:"hash,omitempty" gorm:"column:hash;type:char(32);size:32;index:idx_hash,unique;comment:文件MD5;"`
-	Content     string     `form:"content" json:"content,omitempty" gorm:"column:content;type:longtext;comment:内容;"`
-	ContentSize int64      `form:"content_size" json:"content_size,omitempty" gorm:"column:content_size;type:bigint(20);default:0;comment:内容大小;"`
-	CreatedAt   *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt   *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
+	Content     string     `form:"content" json:"content,omitempty" gorm:"column:content;type:text;comment:内容;"`
+	ContentSize int64      `form:"content_size" json:"content_size,omitempty" gorm:"column:content_size;type:bigint;default:0;comment:内容大小;"`
+	CreatedAt   *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt   *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
 }
 
 func (Attachment) TableName() string {

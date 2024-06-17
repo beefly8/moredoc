@@ -13,13 +13,13 @@ type Navigation struct {
 	Href        string     `form:"href" json:"href,omitempty" gorm:"column:href;type:varchar(255);size:255;comment:跳转链接;"`
 	Target      string     `form:"target" json:"target,omitempty" gorm:"column:target;type:varchar(16);size:16;comment:打开方式;"`
 	Color       string     `form:"color" json:"color,omitempty" gorm:"column:color;type:varchar(32);size:32;comment:链接颜色;"`
-	Sort        int        `form:"sort" json:"sort,omitempty" gorm:"column:sort;type:int(11);size:11;default:0;comment:排序，值越大越靠前;"`
-	Enable      *bool      `form:"enable" json:"enable,omitempty" gorm:"column:enable;type:int(11);size:11;default:0;comment:是否启用;"`
-	ParentId    int64      `form:"parent_id" json:"parent_id,omitempty" gorm:"column:parent_id;type:int(11);size:11;default:0;comment:上级id;"`
+	Sort        int        `form:"sort" json:"sort,omitempty" gorm:"column:sort;type:integer;size:11;default:0;comment:排序，值越大越靠前;"`
+	Enable      *bool      `form:"enable" json:"enable,omitempty" gorm:"column:enable;type:boolean;size:11;default:false;comment:是否启用;"`
+	ParentId    int64      `form:"parent_id" json:"parent_id,omitempty" gorm:"column:parent_id;type:integer;size:11;default:0;comment:上级id;"`
 	Description string     `form:"description" json:"description,omitempty" gorm:"column:description;type:varchar(1024);size:1024;comment:描述;"`
-	CreatedAt   *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt   *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
-	Fixed       bool       `form:"fixed" json:"fixed,omitempty" gorm:"column:fixed;type:tinyint(1);size:1;default:0;comment:是否固定;"`
+	CreatedAt   *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt   *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
+	Fixed       bool       `form:"fixed" json:"fixed,omitempty" gorm:"column:fixed;type:boolean;size:1;default:false;comment:是否固定;"`
 }
 
 func (Navigation) TableName() string {

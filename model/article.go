@@ -22,19 +22,19 @@ type Article struct {
 	Id            int64          `form:"id" json:"id,omitempty" gorm:"primaryKey;autoIncrement;column:id;comment:;"`
 	Identifier    string         `form:"identifier" json:"identifier,omitempty" gorm:"column:identifier;type:varchar(64);size:64;index:identifier,unique;comment:文章标识，唯一;"`
 	UserId        int64          `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint;comment:用户ID;default:0;index:user_id"`
-	ViewCount     int            `form:"view_count" json:"view_count,omitempty" gorm:"column:view_count;type:int(11);size:11;default:0;comment:阅读;"`
-	FavoriteCount int            `form:"favorite_count" json:"favorite_count,omitempty" gorm:"column:favorite_count;type:int(11);size:11;default:0;comment:收藏;"`
-	CommentCount  int            `form:"comment_count" json:"comment_count,omitempty" gorm:"column:comment_count;type:int(11);size:11;default:0;comment:评论;"`
+	ViewCount     int            `form:"view_count" json:"view_count,omitempty" gorm:"column:view_count;type:integer;size:11;default:0;comment:阅读;"`
+	FavoriteCount int            `form:"favorite_count" json:"favorite_count,omitempty" gorm:"column:favorite_count;type:integer;size:11;default:0;comment:收藏;"`
+	CommentCount  int            `form:"comment_count" json:"comment_count,omitempty" gorm:"column:comment_count;type:integer;size:11;default:0;comment:评论;"`
 	Title         string         `form:"title" json:"title,omitempty" gorm:"column:title;type:varchar(255);size:255;comment:文章标题;"`
 	Keywords      string         `form:"keywords" json:"keywords,omitempty" gorm:"column:keywords;type:varchar(255);size:255;comment:关键字;"`
 	Description   string         `form:"description" json:"description,omitempty" gorm:"column:description;type:varchar(255);size:255;comment:摘要;"`
-	Content       string         `form:"content" json:"content,omitempty" gorm:"column:content;type:longtext;comment:内容;"`
-	CreatedAt     time.Time      `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt     time.Time      `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
-	DeletedAt     gorm.DeletedAt `form:"deleted_at" json:"deleted_at,omitempty" gorm:"column:deleted_at;type:datetime;comment:删除时间;index:idx_deleted_at"`
-	RecommendAt   *time.Time     `form:"recommend_at" json:"recommend_at,omitempty" gorm:"column:recommend_at;type:datetime;comment:推荐时间;index:idx_recommend_at;default:null;"`
+	Content       string         `form:"content" json:"content,omitempty" gorm:"column:content;type:text;comment:内容;"`
+	CreatedAt     time.Time      `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt     time.Time      `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
+	DeletedAt     gorm.DeletedAt `form:"deleted_at" json:"deleted_at,omitempty" gorm:"column:deleted_at;type:timestamp;comment:删除时间;index:idx_deleted_at"`
+	RecommendAt   *time.Time     `form:"recommend_at" json:"recommend_at,omitempty" gorm:"column:recommend_at;type:timestamp;comment:推荐时间;index:idx_recommend_at;default:null;"`
 	CategoryId    []int64        `form:"category_id" json:"category_id,omitempty" gorm:"-"`
-	Status        int32          `form:"status" json:"status,omitempty" gorm:"column:status;type:int(11);size:11;default:0;comment:状态;index:idx_status"`
+	Status        int32          `form:"status" json:"status,omitempty" gorm:"column:status;type:integer;size:11;default:0;comment:状态;index:idx_status"`
 	RejectReason  string         `form:"reject_reason" json:"reject_reason,omitempty" gorm:"column:reject_reason;type:varchar(2048);size:2048;comment:审核拒绝信息;"`
 }
 

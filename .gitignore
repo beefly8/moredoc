@@ -22,3 +22,4 @@ license.cert
 /web
 .DS_Store
 /moredoc
+/dist

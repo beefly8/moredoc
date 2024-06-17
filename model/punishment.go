@@ -19,15 +19,15 @@ const (
 
 type Punishment struct {
 	Id        int64      `form:"id" json:"id,omitempty" gorm:"primaryKey;autoIncrement;column:id;comment:自增主键;"`
-	UserId    int64      `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint(20);size:20;default:0;index:idx_user_id;comment:用户ID;"`
-	Type      int        `form:"type" json:"type,omitempty" gorm:"column:type;type:int(11);size:11;default:0;comment:惩罚类型，对应user表的status;"`
-	Enable    bool       `form:"enable" json:"enable,omitempty" gorm:"column:enable;type:tinyint(1);size:1;default:0;index:idx_enable;comment:0 关闭，1启用;"`
+	UserId    int64      `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint;size:20;default:0;index:idx_user_id;comment:用户ID;"`
+	Type      int        `form:"type" json:"type,omitempty" gorm:"column:type;type:integer;size:11;default:0;comment:惩罚类型，对应user表的status;"`
+	Enable    bool       `form:"enable" json:"enable,omitempty" gorm:"column:enable;type:boolean;size:1;default:false;index:idx_enable;comment:0 关闭，1启用;"`
 	Operators string     `form:"operators" json:"operators,omitempty" gorm:"column:operators;type:text;comment:操作信息;"`
 	Reason    string     `form:"reason" json:"reason,omitempty" gorm:"column:reason;type:text;comment:惩罚原因;"`
 	Remark    string     `form:"remark" json:"remark,omitempty" gorm:"column:remark;type:text;comment:惩罚备注;"`
-	EndTime   *time.Time `form:"end_time" json:"end_time,omitempty" gorm:"column:end_time;type:datetime;comment:惩罚结束时间，没有结束时间，则表示永久;"`
-	CreatedAt *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
+	EndTime   *time.Time `form:"end_time" json:"end_time,omitempty" gorm:"column:end_time;type:timestamp;comment:惩罚结束时间，没有结束时间，则表示永久;"`
+	CreatedAt *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
 }
 
 type PunishmentOperator struct {

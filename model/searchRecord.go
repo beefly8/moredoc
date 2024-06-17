@@ -9,16 +9,16 @@ import (
 
 type SearchRecord struct {
 	Id        int64      `form:"id" json:"id,omitempty" gorm:"primaryKey;autoIncrement;column:id;comment:;"`
-	UserId    int64      `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint(20);size:20;default:0;comment:搜索用户;"`
+	UserId    int64      `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint;size:20;default:0;comment:搜索用户;"`
 	Ip        string     `form:"ip" json:"ip,omitempty" gorm:"column:ip;type:varchar(64);size:64;comment:IP地址;"`
-	Total     int        `form:"total" json:"total,omitempty" gorm:"column:total;type:int(11);size:11;default:0;comment:搜索结果;"`
-	Page      int        `form:"page" json:"page,omitempty" gorm:"column:page;type:int(11);size:11;default:0;comment:搜索页码;"`
+	Total     int        `form:"total" json:"total,omitempty" gorm:"column:total;type:integer;size:11;default:0;comment:搜索结果;"`
+	Page      int        `form:"page" json:"page,omitempty" gorm:"column:page;type:integer;size:11;default:0;comment:搜索页码;"`
 	UserAgent string     `form:"user_agent" json:"user_agent,omitempty" gorm:"column:user_agent;type:varchar(512);size:512;comment:请求客户端;"`
 	Keywords  string     `form:"keywords" json:"keywords,omitempty" gorm:"column:keywords;type:varchar(64);size:64;comment:搜索关键字;"`
 	SpendTime float64    `form:"spend_time" json:"spend_time,omitempty" gorm:"column:spend_time;type:decimal(10,2);size:10;default:0.00;comment:搜索耗时;"`
-	CreatedAt *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;index:idx_created_at;comment:创建时间，搜索时间;"`
-	UpdatedAt *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
-	Type      int        `form:"type" json:"type,omitempty" gorm:"column:type;type:int(11);size:11;default:0;comment:搜索类型,0文档，1文章;"`
+	CreatedAt *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;index:idx_created_at;comment:创建时间，搜索时间;"`
+	UpdatedAt *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
+	Type      int        `form:"type" json:"type,omitempty" gorm:"column:type;type:integer;size:11;default:0;comment:搜索类型,0文档，1文章;"`
 }
 
 var searchRecordQueue = make(chan *SearchRecord, 1024)

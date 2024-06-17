@@ -23,6 +23,7 @@ type Database struct {
 	ShowSQL bool
 	MaxIdle int
 	MaxOpen int
+	Driver  string
 	Prefix  string // table prefix, default is nd_
 }
 

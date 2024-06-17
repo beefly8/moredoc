@@ -10,8 +10,8 @@ type GroupPermission struct {
 	Id           int64      `form:"id" json:"id,omitempty" gorm:"primaryKey;autoIncrement;column:id;comment:自增主键;"`
 	GroupId      int64      `form:"group_id" json:"group_id,omitempty" gorm:"index:group_permission,unique;index:group_id;column:group_id;comment:组ID;"`
 	PermissionId int64      `form:"permission_id" json:"permission_id,omitempty" gorm:"index:group_permission,unique;column:permission_id;comment:权限ID;"`
-	CreatedAt    *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt    *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
+	CreatedAt    *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt    *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
 }
 
 func (GroupPermission) TableName() string {

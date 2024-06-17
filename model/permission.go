@@ -13,8 +13,8 @@ type Permission struct {
 	Path        string     `form:"path" json:"path,omitempty" gorm:"column:path;type:varchar(128);size:128;index:method_path,unique;comment:API路径;"`
 	Title       string     `form:"title" json:"title,omitempty" gorm:"column:title;type:varchar(255);size:255;comment:中文名称;"`
 	Description string     `form:"description" json:"description,omitempty" gorm:"column:description;type:varchar(255);size:255;comment:权限描述;"`
-	CreatedAt   *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt   *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
+	CreatedAt   *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt   *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
 }
 
 func (Permission) TableName() string {

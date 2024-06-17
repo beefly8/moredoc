@@ -37,20 +37,20 @@ type User struct {
 	Signature     string     `form:"signature" json:"signature,omitempty" gorm:"column:signature;type:varchar(255);size:255;comment:签名;"`
 	LastLoginIp   string     `form:"last_login_ip" json:"last_login_ip,omitempty" gorm:"column:last_login_ip;type:varchar(64);size:64;comment:最后登录 ip 地址;"`
 	RegisterIp    string     `form:"register_ip" json:"register_ip,omitempty" gorm:"column:register_ip;type:varchar(64);size:64;comment:注册ip;"`
-	DocCount      int        `form:"doc_count" json:"doc_count,omitempty" gorm:"column:doc_count;type:int(10);default:0;comment:上传的文档数;"`
-	FollowCount   int        `form:"follow_count" json:"follow_count,omitempty" gorm:"column:follow_count;type:int(10);default:0;comment:关注数;"`
-	FansCount     int        `form:"fans_count" json:"fans_count,omitempty" gorm:"column:fans_count;type:int(10);default:0;comment:粉丝数;"`
-	FavoriteCount int        `form:"favorite_count" json:"favorite_count,omitempty" gorm:"column:favorite_count;type:int(10);default:0;comment:收藏数;"`
-	CommentCount  int        `form:"comment_count" json:"comment_count,omitempty" gorm:"column:comment_count;type:int(11);size:11;default:0;comment:评论数;"`
-	CreditCount   int        `form:"credit_count" json:"credit_count,omitempty" gorm:"column:credit_count;type:int(11);size:11;default:0;comment:积分数量;"`
-	ArticleCount  int        `form:"article_count" json:"article_count,omitempty" gorm:"column:article_count;type:int(11);size:11;default:0;comment:文章数量;"`
+	DocCount      int        `form:"doc_count" json:"doc_count,omitempty" gorm:"column:doc_count;type:integer;default:0;comment:上传的文档数;"`
+	FollowCount   int        `form:"follow_count" json:"follow_count,omitempty" gorm:"column:follow_count;type:integer;default:0;comment:关注数;"`
+	FansCount     int        `form:"fans_count" json:"fans_count,omitempty" gorm:"column:fans_count;type:integer;default:0;comment:粉丝数;"`
+	FavoriteCount int        `form:"favorite_count" json:"favorite_count,omitempty" gorm:"column:favorite_count;type:integer;default:0;comment:收藏数;"`
+	CommentCount  int        `form:"comment_count" json:"comment_count,omitempty" gorm:"column:comment_count;type:integer;size:11;default:0;comment:评论数;"`
+	CreditCount   int        `form:"credit_count" json:"credit_count,omitempty" gorm:"column:credit_count;type:integer;size:11;default:0;comment:积分数量;"`
+	ArticleCount  int        `form:"article_count" json:"article_count,omitempty" gorm:"column:article_count;type:integer;size:11;default:0;comment:文章数量;"`
 	Avatar        string     `form:"avatar" json:"avatar,omitempty" gorm:"column:avatar;type:varchar(255);size:255;comment:头像;"`
 	Identity      string     `form:"identity" json:"identity,omitempty" gorm:"column:identity;type:char(18);size:18;comment:身份证号码;"`
 	Realname      string     `form:"realname" json:"realname,omitempty" gorm:"column:realname;type:varchar(20);size:20;comment:身份证姓名;"`
-	LoginAt       *time.Time `form:"login_at" json:"login_at,omitempty" gorm:"column:login_at;type:datetime;comment:最后登录时间;"`
-	CreatedAt     *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt     *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
-	// Status        int8       `form:"status" json:"status,omitempty" gorm:"column:status;type:tinyint(4);size:4;default:0;index:status;comment:用户状态，0表示正常，其他状态表示被惩罚;"`
+	LoginAt       *time.Time `form:"login_at" json:"login_at,omitempty" gorm:"column:login_at;type:timestamp;comment:最后登录时间;"`
+	CreatedAt     *time.Time `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt     *time.Time `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
+	// Status        int8       `form:"status" json:"status,omitempty" gorm:"column:status;type:boolean;size:4;default:0;index:status;comment:用户状态，0表示正常，其他状态表示被惩罚;"`
 	Remark string `form:"remark" json:"remark,omitempty" gorm:"column:remark;type:varchar(255);size:255;comment:备注;"`
 }
 

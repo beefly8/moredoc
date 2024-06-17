@@ -45,27 +45,27 @@ type Document struct {
 	Title         string          `form:"title" json:"title,omitempty" gorm:"column:title;type:varchar(255);size:255;comment:文档名称;"`
 	Keywords      string          `form:"keywords" json:"keywords,omitempty" gorm:"column:keywords;type:varchar(255);size:255;comment:文档关键字;"`
 	Description   string          `form:"description" json:"description,omitempty" gorm:"column:description;type:varchar(1024);size:1024;comment:文档描述;"`
-	UserId        int64           `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint(20);size:20;default:0;index:user_id;comment:文档所属用户ID;"`
-	Width         int             `form:"width" json:"width,omitempty" gorm:"column:width;type:int(11);size:11;default:0;comment:宽;"`
-	Height        int             `form:"height" json:"height,omitempty" gorm:"column:height;type:int(11);size:11;default:0;comment:高;"`
-	Preview       int             `form:"preview" json:"preview,omitempty" gorm:"column:preview;type:int(11);size:11;default:0;comment:允许预览页数;"`
-	Pages         int             `form:"pages" json:"pages,omitempty" gorm:"column:pages;type:int(11);size:11;default:0;comment:文档页数;index:idx_pages;"`
-	DownloadCount int             `form:"download_count" json:"download_count,omitempty" gorm:"column:download_count;type:int(11);size:11;default:0;comment:下载人次;index:idx_download_count;"`
-	ViewCount     int             `form:"view_count" json:"view_count,omitempty" gorm:"column:view_count;type:int(11);size:11;default:0;comment:浏览人次;index:idx_view_count;"`
-	FavoriteCount int             `form:"favorite_count" json:"favorite_count,omitempty" gorm:"column:favorite_count;type:int(11);size:11;default:0;comment:收藏人次;index:idx_favorite_count;"`
-	CommentCount  int             `form:"comment_count" json:"comment_count,omitempty" gorm:"column:comment_count;type:int(11);size:11;default:0;comment:评论人次;"`
-	Score         int             `form:"score" json:"score,omitempty" gorm:"column:score;type:int(11);size:11;default:300;comment:评分，3位整数表示，500表示5分;"`
-	ScoreCount    int             `form:"score_count" json:"score_count,omitempty" gorm:"column:score_count;type:int(11);size:11;default:0;comment:评分数量;"`
-	Price         int             `form:"price" json:"price,omitempty" gorm:"column:price;type:int(11);size:11;default:0;comment:价格，0表示免费;index:idx_price;"`
-	Size          int64           `form:"size" json:"size,omitempty" gorm:"column:size;type:bigint(20);size:20;default:0;comment:文件大小;"`
+	UserId        int64           `form:"user_id" json:"user_id,omitempty" gorm:"column:user_id;type:bigint;size:20;default:0;index:user_id;comment:文档所属用户ID;"`
+	Width         int             `form:"width" json:"width,omitempty" gorm:"column:width;type:integer;size:11;default:0;comment:宽;"`
+	Height        int             `form:"height" json:"height,omitempty" gorm:"column:height;type:integer;size:11;default:0;comment:高;"`
+	Preview       int             `form:"preview" json:"preview,omitempty" gorm:"column:preview;type:integer;size:11;default:0;comment:允许预览页数;"`
+	Pages         int             `form:"pages" json:"pages,omitempty" gorm:"column:pages;type:integer;size:11;default:0;comment:文档页数;index:idx_pages;"`
+	DownloadCount int             `form:"download_count" json:"download_count,omitempty" gorm:"column:download_count;type:integer;size:11;default:0;comment:下载人次;index:idx_download_count;"`
+	ViewCount     int             `form:"view_count" json:"view_count,omitempty" gorm:"column:view_count;type:integer;size:11;default:0;comment:浏览人次;index:idx_view_count;"`
+	FavoriteCount int             `form:"favorite_count" json:"favorite_count,omitempty" gorm:"column:favorite_count;type:integer;size:11;default:0;comment:收藏人次;index:idx_favorite_count;"`
+	CommentCount  int             `form:"comment_count" json:"comment_count,omitempty" gorm:"column:comment_count;type:integer;size:11;default:0;comment:评论人次;"`
+	Score         int             `form:"score" json:"score,omitempty" gorm:"column:score;type:integer;size:11;default:300;comment:评分，3位整数表示，500表示5分;"`
+	ScoreCount    int             `form:"score_count" json:"score_count,omitempty" gorm:"column:score_count;type:integer;size:11;default:0;comment:评分数量;"`
+	Price         int             `form:"price" json:"price,omitempty" gorm:"column:price;type:integer;size:11;default:0;comment:价格，0表示免费;index:idx_price;"`
+	Size          int64           `form:"size" json:"size,omitempty" gorm:"column:size;type:bigint;size:20;default:0;comment:文件大小;"`
 	Ext           string          `form:"ext" json:"ext,omitempty" gorm:"column:ext;type:varchar(16);size:16;index:idx_ext;comment:文件扩展名"`
-	Status        int             `form:"status" json:"status,omitempty" gorm:"column:status;type:smallint(6);size:6;default:0;index:status;comment:文档状态：0 待转换，1 转换中，2 转换完成，3 转换失败，4 禁用;"`
-	CreatedAt     *time.Time      `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:datetime;comment:创建时间;"`
-	UpdatedAt     *time.Time      `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:datetime;comment:更新时间;"`
-	DeletedAt     *gorm.DeletedAt `form:"deleted_at" json:"deleted_at,omitempty" gorm:"column:deleted_at;type:datetime;index:idx_deleted_at;comment:删除时间;"`
-	DeletedUserId int64           `form:"deleted_user_id" json:"deleted_user_id,omitempty" gorm:"column:deleted_user_id;type:bigint(20);size:20;default:0;comment:删除用户ID;"`
-	EnableGZIP    bool            `form:"enable_gzip" json:"enable_gzip,omitempty" gorm:"column:enable_gzip;type:tinyint(1);size:1;default:0;comment:是否启用GZIP压缩;"`
-	RecommendAt   *time.Time      `form:"recommend_at" json:"recommend_at,omitempty" gorm:"column:recommend_at;type:datetime;comment:推荐时间;index:idx_recommend_at;"`
+	Status        int             `form:"status" json:"status,omitempty" gorm:"column:status;type:integer;size:6;default:0;index:status;comment:文档状态：0 待转换，1 转换中，2 转换完成，3 转换失败，4 禁用;"`
+	CreatedAt     *time.Time      `form:"created_at" json:"created_at,omitempty" gorm:"column:created_at;type:timestamp;comment:创建时间;"`
+	UpdatedAt     *time.Time      `form:"updated_at" json:"updated_at,omitempty" gorm:"column:updated_at;type:timestamp;comment:更新时间;"`
+	DeletedAt     *gorm.DeletedAt `form:"deleted_at" json:"deleted_at,omitempty" gorm:"column:deleted_at;type:timestamp;index:idx_deleted_at;comment:删除时间;"`
+	DeletedUserId int64           `form:"deleted_user_id" json:"deleted_user_id,omitempty" gorm:"column:deleted_user_id;type:bigint;size:20;default:0;comment:删除用户ID;"`
+	EnableGZIP    bool            `form:"enable_gzip" json:"enable_gzip,omitempty" gorm:"column:enable_gzip;type:boolean;size:1;default:false;comment:是否启用GZIP压缩;"`
+	RecommendAt   *time.Time      `form:"recommend_at" json:"recommend_at,omitempty" gorm:"column:recommend_at;type:timestamp;comment:推荐时间;index:idx_recommend_at;"`
 	PreviewExt    string          `form:"preview_ext" json:"preview_ext,omitempty" gorm:"column:preview_ext;type:varchar(16);size:16;default:.svg;comment:预览图扩展名;"`
 	UUID          string          `form:"uuid" json:"uuid,omitempty" gorm:"column:uuid;type:char(16);index:idx_uuid;size:16;default:;comment:uuid值，这里用uuid的md5加密串的16位;"`
 	Language      string          `form:"language" json:"language,omitempty" gorm:"column:language;type:varchar(16);size:16;comment:语言;index:idx_language;"`
