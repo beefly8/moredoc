@@ -63,10 +63,8 @@ func checkAndCreateDatabase(cfgI *conf.Config, loggger *zap.Logger) (err error) 
 			loggger.Error("db.Exec", zap.Error(err))
 		}
 		return err
-	} else if cfgI.Database.Driver == "postgresql" {
-
+	} else if cfgI.Database.Driver == "postgresql_" {
 		var dbNameToCreate = "moredoc"
-
 		db, err := gorm.Open(postgres.Open(cfgI.Database.DSN), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
 				TablePrefix:   cfgI.Database.Prefix, // 表名前缀，`User`表为`t_users`
@@ -95,7 +93,27 @@ func checkAndCreateDatabase(cfgI *conf.Config, loggger *zap.Logger) (err error) 
 		if err != nil {
 			loggger.Error("db.Exec", zap.Error(err))
 			return err
-
+		}
+	} else if cfgI.Database.Driver == "postgresql" {
+		var dbNameToCreate = "moredoc"
+		db, err := gorm.Open(postgres.Open(cfgI.Database.DSN), &gorm.Config{
+			NamingStrategy: schema.NamingStrategy{
+				TablePrefix:   cfgI.Database.Prefix, // 表名前缀，`User`表为`t_users`
+				SingularTable: true,                 // 使用单数表名，启用该选项后，`User` 表将是`user`
+			},
+			Logger: logger.Default,
+		})
+		// 创建新数据库 SQL 语句
+		createDBQuery := fmt.Sprintf("DO $$ BEGIN     IF NOT EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '%s') THEN         EXECUTE 'CREATE SCHEMA %s';    END IF;END $$;", dbNameToCreate, dbNameToCreate)
+		// 执行创建数据库操作
+		rst := db.Exec(createDBQuery)
+		fmt.Printf("Database %s created successfully!\n", dbNameToCreate)
+		if rst.Error != nil {
+			loggger.Error("db.Exec", zap.Error(err))
+		}
+		if err != nil {
+			loggger.Error("db.Exec", zap.Error(err))
+			return err
 		}
 	}
 	return err

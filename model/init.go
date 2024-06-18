@@ -275,14 +275,14 @@ func (m *DBModel) alterTableBeforeSyncDB() {
 		}
 	}
 
-	// 查询category表，将原本有title和parent_id的唯一索引删除
-	tableCategory := Category{}.TableName()
-	m.db.Exec(fmt.Sprintf("alter table %s drop index %s", tableCategory, "parent_id_title"))
-
-	// 删除favorite表相关索引
-	tableFavorite := Favorite{}.TableName()
-	m.db.Exec(fmt.Sprintf("alter table %s drop index %s", tableFavorite, "idx_user_document"))
-	m.db.Exec(fmt.Sprintf("alter table %s drop index %s", tableFavorite, "idx_created_at"))
+	//// 查询category表，将原本有title和parent_id的唯一索引删除
+	//tableCategory := Category{}.TableName()
+	//m.db.Exec(fmt.Sprintf("alter table %s drop index %s", tableCategory, "parent_id_title"))
+	//
+	//// 删除favorite表相关索引
+	//tableFavorite := Favorite{}.TableName()
+	//m.db.Exec(fmt.Sprintf("alter table %s drop index %s", tableFavorite, "idx_user_document"))
+	//m.db.Exec(fmt.Sprintf("alter table %s drop index %s", tableFavorite, "idx_created_at"))
 }
 
 func (m *DBModel) alterTableAfterSyncDB() {
@@ -291,8 +291,14 @@ func (m *DBModel) alterTableAfterSyncDB() {
 
 func (m *DBModel) ShowIndexes(table string) (indexes []TableIndex) {
 	if m.cfg.Driver == "mysql" {
-
 		sql := "show index from " + table
+		err := m.db.Raw(sql).Find(&indexes).Error
+		if err != nil {
+			m.logger.Error("ShowIndexes", zap.Error(err))
+		}
+		return
+	} else if m.cfg.Driver == "postgresql" {
+		sql := fmt.Sprintf("SELECT   tablename as table ,0 as Non_unique ,indexname as key_name,1 as seq_in_index,'' as column_name,' ' as Collation, 1 as Cardinality,null as Sub_part, null as Packed,null as Null,'' as Index_type,'' as Comment,'' as Index_comment FROM     pg_indexes WHERE     tablename = '%s';", table)
 		err := m.db.Raw(sql).Find(&indexes).Error
 		if err != nil {
 			m.logger.Error("ShowIndexes", zap.Error(err))
@@ -500,8 +506,8 @@ func (m *DBModel) initFriendlink() (err error) {
 
 	// 默认友链
 	var friendlinks = []Friendlink{
-		{Title: "摩枫网络科技", Link: "https://mnt.ltd", Enable: true},
-		{Title: "书栈网", Link: "https://www.bookstack.cn", Enable: true},
+		{Title: "知识库", Link: "http://www.zsk.com.cn", Enable: true},
+		{Title: "文库", Link: "http://www.wenku.com.cn", Enable: true},
 	}
 
 	err = m.db.Create(&friendlinks).Error
@@ -636,10 +642,12 @@ func (m *DBModel) IsSupportGroupBy() (yes bool, sqlMode string) {
 
 // 设置数据库的sql_mode，去掉 ONLY_FULL_GROUP_BY，使得支持group by查询
 func (m *DBModel) SetSQLMode() (err error) {
-	err = m.db.Exec("set global sql_mode=(select replace(@@sql_mode,'ONLY_FULL_GROUP_BY',''))").Error
-	if err != nil {
-		m.logger.Error("SetSQLMode", zap.Error(err))
-		return
+	if m.cfg.Driver == "mysql" {
+		err = m.db.Exec("set global sql_mode=(select replace(@@sql_mode,'ONLY_FULL_GROUP_BY',''))").Error
+		if err != nil {
+			m.logger.Error("SetSQLMode", zap.Error(err))
+			return
+		}
 	}
 
 	err = m.resetDB()
@@ -660,20 +668,31 @@ func (m *DBModel) resetDB() (err error) {
 		sqlLogLevel = logger.Silent
 	}
 
-	db, err = gorm.Open(mysql.New(mysql.Config{
-		DSN:                       m.cfg.DSN, // DSN data source name
-		DefaultStringSize:         255,       // string 类型字段的默认长度
-		DisableDatetimePrecision:  true,      // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
-		DontSupportRenameIndex:    true,      // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
-		DontSupportRenameColumn:   true,      // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
-		SkipInitializeWithVersion: false,     // 根据当前 MySQL 版本自动配置
-	}), &gorm.Config{
-		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   m.cfg.Prefix, // 表名前缀，`User`表为`t_users`
-			SingularTable: true,         // 使用单数表名，启用该选项后，`User` 表将是`user`
-		},
-		Logger: logger.Default.LogMode(sqlLogLevel),
-	})
+	if m.cfg.Driver == "mysql" {
+		db, err = gorm.Open(mysql.New(mysql.Config{
+			DSN:                       m.cfg.DSN, // DSN data source name
+			DefaultStringSize:         255,       // string 类型字段的默认长度
+			DisableDatetimePrecision:  true,      // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
+			DontSupportRenameIndex:    true,      // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
+			DontSupportRenameColumn:   true,      // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
+			SkipInitializeWithVersion: false,     // 根据当前 MySQL 版本自动配置
+		}), &gorm.Config{
+			NamingStrategy: schema.NamingStrategy{
+				TablePrefix:   m.cfg.Prefix, // 表名前缀，`User`表为`t_users`
+				SingularTable: true,         // 使用单数表名，启用该选项后，`User` 表将是`user`
+			},
+			Logger: logger.Default.LogMode(sqlLogLevel),
+		})
+	} else if m.cfg.Driver == "postgresql" {
+		db, err = gorm.Open(postgres.Open(m.cfg.DSN), &gorm.Config{
+			NamingStrategy: schema.NamingStrategy{
+				TablePrefix:   m.cfg.Prefix, // 表名前缀，`User`表为`t_users`
+				SingularTable: true,         // 使用单数表名，启用该选项后，`User` 表将是`user`
+			},
+			Logger: logger.Default.LogMode(sqlLogLevel),
+		})
+	}
+
 	if err != nil {
 		m.logger.Error("NewDBModel", zap.Error(err), zap.Any("config", m.cfg))
 		return
