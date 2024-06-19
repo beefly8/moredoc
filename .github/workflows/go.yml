@@ -5,7 +5,7 @@ name: Go
 
 on:
   push:
-    branches: [ "detached" ]
+    branches: [ "dev3.1" ]
 
 jobs:
 
@@ -31,9 +31,6 @@ jobs:
           build linux arm
           build linux amd64
           build windows amd64 .exe
-          build windows 386 .exe
-          build darwin amd64
-          build darwin arm64
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
       with:
