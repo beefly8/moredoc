@@ -293,22 +293,22 @@ func (s *ConfigAPIService) GetEnvs(ctx context.Context, req *emptypb.Empty) (res
 		}
 	}
 
-	// MySQL 的group by 查询
-	yes, sqlMode := s.dbModel.IsSupportGroupBy()
-	if !yes {
-		now := time.Now()
-		envs = append(envs, &pb.EnvDependent{
-			Name:        "GroupBy",
-			IsRequired:  true,
-			IsInstalled: false, // 表示
-			Description: "魔豆文库的部分查询需要MySQL的group by功能，如果不支持，将导致部分功能无法正常使用和出错。",
-			Error: fmt.Sprintf(
-				`您当前MySQL数据库不支持 group by 查询，请修改数据库的 sql_mode 配置，去掉 ONLY_FULL_GROUP_BY。<br> 如将当前的 <br/>sql_mode=%s <br/>修改为<br/>sql_mode=%s`,
-				sqlMode, strings.ReplaceAll(sqlMode, "ONLY_FULL_GROUP_BY,", ""),
-			),
-			CheckedAt: &now,
-		})
-	}
+	//// MySQL 的group by 查询
+	//yes, sqlMode := s.dbModel.IsSupportGroupBy()
+	//if !yes {
+	//	now := time.Now()
+	//	envs = append(envs, &pb.EnvDependent{
+	//		Name:        "GroupBy",
+	//		IsRequired:  true,
+	//		IsInstalled: false, // 表示
+	//		Description: "魔豆文库的部分查询需要MySQL的group by功能，如果不支持，将导致部分功能无法正常使用和出错。",
+	//		Error: fmt.Sprintf(
+	//			`您当前MySQL数据库不支持 group by 查询，请修改数据库的 sql_mode 配置，去掉 ONLY_FULL_GROUP_BY。<br> 如将当前的 <br/>sql_mode=%s <br/>修改为<br/>sql_mode=%s`,
+	//			sqlMode, strings.ReplaceAll(sqlMode, "ONLY_FULL_GROUP_BY,", ""),
+	//		),
+	//		CheckedAt: &now,
+	//	})
+	//}
 
 	res.Envs = envs
 	return
