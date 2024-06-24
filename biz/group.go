@@ -119,6 +119,10 @@ func (s *GroupAPIService) ListGroup(ctx context.Context, req *pb.ListGroupReques
 		WithCount:    true,
 	}
 
+	if opt.Size <= 0 {
+		opt.Size = 10
+	}
+
 	if req.Wd != "" {
 		_, err := s.checkPermission(ctx)
 		if err == nil {

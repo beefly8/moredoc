@@ -123,9 +123,13 @@ func (s *AttachmentAPIService) ListAttachment(ctx context.Context, req *pb.ListA
 
 	opt := &model.OptionGetAttachmentList{
 		Page:      int(req.Page),
-		Size:      int(req.Size()),
+		Size:      int(req.Size_),
 		WithCount: true,
 		QueryIn:   make(map[string][]interface{}),
+	}
+
+	if opt.Size <= 0 {
+		opt.Size = 10
 	}
 
 	if len(req.UserId) > 0 {

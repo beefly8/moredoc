@@ -131,7 +131,11 @@ func (s *CategoryAPIService) ListCategory(ctx context.Context, req *pb.ListCateg
 		QueryIn:      make(map[string][]interface{}),
 		SelectFields: req.Field,
 		Page:         int(req.Page),
-		Size:         int(req.Size()),
+		Size:         int(req.Size_),
+	}
+
+	if opt.Size <= 0 {
+		opt.Size = 10
 	}
 
 	if len(req.ParentId) > 0 {
@@ -152,11 +156,11 @@ func (s *CategoryAPIService) ListCategory(ctx context.Context, req *pb.ListCateg
 		opt.QueryIn["enable"] = []interface{}{true}
 	}
 
-	if len(req.Type) > 0 {
-		opt.QueryIn["type"] = util.Slice2Interface(req.Type)
-	} else {
-		opt.QueryIn["type"] = []interface{}{0}
-	}
+	//if len(req.Type) > 0 {
+	//	opt.QueryIn["type"] = util.Slice2Interface(req.Type)
+	//} else {
+	//	opt.QueryIn["type"] = []interface{}{0}
+	//}
 
 	cates, total, err := s.dbModel.GetCategoryList(opt)
 	if err != nil {
