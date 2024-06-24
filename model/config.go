@@ -464,7 +464,7 @@ const (
 	ConfigSSREnable        = "enable"
 	ConfigSSRAddr          = "addr" // SSR 服务地址
 	ConfigSSRUseragent     = "useragent"
-	ConfigSSRFolder        = "folder"         // SSR项目文件夹，用于使用魔豆文库替代pm2等进程管理工具来启动SSR服务
+	ConfigSSRFolder        = "folder"         // SSR项目文件夹，用于使用在线文库替代pm2等进程管理工具来启动SSR服务
 	ConfigSSRCacheHome     = "cache_home"     // 首页缓存时间
 	ConfigSSRCacheCategory = "cache_category" // 分类页缓存时间
 	ConfigSSRCacheDocument = "cache_document" // 文档页缓存时间
@@ -819,7 +819,7 @@ func (m *DBModel) RefreshLatestRelease() (err error) {
 func (m *DBModel) GetCreditName() string {
 	creditName := m.GetConfigOfScore(ConfigScoreCreditName).CreditName
 	if creditName == "" {
-		creditName = "魔豆"
+		creditName = "积分"
 	}
 	return creditName
 }
@@ -851,17 +851,17 @@ func (m *DBModel) convertConfig2Map(cfgs []Config) (data map[string]interface{})
 
 func (m *DBModel) initConfig() (err error) {
 	closeStatement := `<div>尊敬的用户，您好：</div>
-	<div>为了给您带来更好的使用体验，<strong>魔豆文库</strong> 正在对服务进行升级维护，预计恢复时间为 <span style="color:red">2024-10-24 06:00:00</span>，请您稍后再进行访问。</div>
+	<div>为了给您带来更好的使用体验，<strong>在线文库</strong> 正在对服务进行升级维护，预计恢复时间为 <span style="color:red">2024-10-24 06:00:00</span>，请您稍后再进行访问。</div>
 	<div>升级维护期间，普通用户将无法正常使用（系统管理人员出于维护的需要不受升级影响）。</div>
 	<div>由此带来的不便，敬请谅解。</div>`
 	// 初始化配置项
 	cfgs := []Config{
 		// 系统配置项
-		{Category: ConfigCategorySystem, Name: ConfigSystemSitename, ColNum: 24, Label: "网站名称", Value: "魔豆文库", Placeholder: "请输入您网站的名称，如：魔豆文库", InputType: InputTypeText, Sort: 10, Options: ""},
-		{Category: ConfigCategorySystem, Name: ConfigSystemDomain, ColNum: 24, Label: "【重要】网站域名", Value: "https://moredoc.mnt.ltd", Placeholder: "请输入您网站的域名访问地址，带 https:// 或 http:// 如 https://moredoc.mnt.ltd，用以生成网站地图sitemap", InputType: InputTypeText, Sort: 11, Options: ""},
-		{Category: ConfigCategorySystem, Name: ConfigSystemTitle, ColNum: 24, Label: "首页标题", Value: "MOREDOC · 魔豆文库", Placeholder: "请输入您网站的首页标题，如：魔豆文库，强大、专业的文库系统", InputType: InputTypeText, Sort: 20, Options: ""},
-		{Category: ConfigCategorySystem, Name: ConfigSystemKeywords, ColNum: 24, Label: "网站关键字", Value: "MOREDOC · 魔豆文库", Placeholder: "请输入您网站的关键字", InputType: InputTypeText, Sort: 30, Options: ""},
-		{Category: ConfigCategorySystem, Name: ConfigSystemDescription, ColNum: 24, Label: "网站描述", Value: "MOREDOC · 魔豆文库", Placeholder: "请输入您网站的描述", InputType: InputTypeTextarea, Sort: 40, Options: ""},
+		{Category: ConfigCategorySystem, Name: ConfigSystemSitename, ColNum: 24, Label: "网站名称", Value: "在线文库", Placeholder: "请输入您网站的名称，如：在线文库", InputType: InputTypeText, Sort: 10, Options: ""},
+		{Category: ConfigCategorySystem, Name: ConfigSystemDomain, ColNum: 24, Label: "网站域名", Value: "https://www.doc.com.cn", Placeholder: "请输入您网站的域名访问地址", InputType: InputTypeText, Sort: 11, Options: ""},
+		{Category: ConfigCategorySystem, Name: ConfigSystemTitle, ColNum: 24, Label: "首页标题", Value: "www.doc.com.cn · 在线文库", Placeholder: "请输入您网站的首页标题，如：在线文库，强大、专业的文库系统", InputType: InputTypeText, Sort: 20, Options: ""},
+		{Category: ConfigCategorySystem, Name: ConfigSystemKeywords, ColNum: 24, Label: "网站关键字", Value: "www.doc.com.cn · 在线文库", Placeholder: "请输入您网站的关键字", InputType: InputTypeText, Sort: 30, Options: ""},
+		{Category: ConfigCategorySystem, Name: ConfigSystemDescription, ColNum: 24, Label: "网站描述", Value: "www.doc.com.cn · 在线文库", Placeholder: "请输入您网站的描述", InputType: InputTypeTextarea, Sort: 40, Options: ""},
 		{Category: ConfigCategorySystem, Name: ConfigSystemRecommendWords, ColNum: 24, Label: "首页搜索推荐词", Value: "", Placeholder: "网站首页搜索推荐关键字，多个关键字用英文逗号分隔", InputType: InputTypeText, Sort: 50, Options: ""},
 		{Category: ConfigCategorySystem, Name: ConfigSystemLogo, ColNum: 12, Label: "网站Logo", Value: "", Placeholder: "请上传一张图片作为网站Logo(透明背景，以便网站底部logo反色展示)", InputType: InputTypeImage, Sort: 60, Options: ""},
 		{Category: ConfigCategorySystem, Name: ConfigSystemFavicon, ColNum: 12, Label: "网站Favicon", Value: "", Placeholder: "请上传一张方方正正的小图片作为网站favicon，建议为 .ico 的图片", InputType: InputTypeImage, Sort: 61, Options: ""},
@@ -920,7 +920,7 @@ func (m *DBModel) initConfig() (err error) {
 		{Category: ConfigCategoryDownload, Name: ConfigDownloadSecretKey, ColNum: 12, Label: "链接签名密钥", Value: "moredoc", Placeholder: "链接签名密钥，用于加密下载链接", InputType: InputTypeText, Sort: 50, Options: ""},
 
 		// 积分规则配置
-		{Category: ConfigCategoryScore, Name: ConfigScoreCreditName, ColNum: 8, Label: "积分名称", Value: "魔豆", Placeholder: "请输入网站的积分名称，默认为魔豆", InputType: InputTypeText, Sort: 1, Options: ""},
+		{Category: ConfigCategoryScore, Name: ConfigScoreCreditName, ColNum: 8, Label: "积分名称", Value: "积分", Placeholder: "请输入网站的积分名称，默认为积分", InputType: InputTypeText, Sort: 1, Options: ""},
 		{Category: ConfigCategoryScore, Name: ConfigScoreRegister, ColNum: 8, Label: "注册", Value: "10", Placeholder: "注册时获得的积分", InputType: InputTypeNumber, Sort: 10, Options: ""},
 		{Category: ConfigCategoryScore, Name: ConfigScoreSignIn, ColNum: 8, Label: "签到", Value: "1", Placeholder: "每日签到获得的积分", InputType: InputTypeNumber, Sort: 20, Options: ""},
 		{Category: ConfigCategoryScore, Name: ConfigScoreDeleteDocument, ColNum: 8, Label: "删除文档", Value: "1", Placeholder: "删除上传文档扣除的积分，0表示不扣除", InputType: InputTypeNumber, Sort: 25, Options: ""},
