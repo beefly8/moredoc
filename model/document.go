@@ -233,18 +233,18 @@ func (m *DBModel) GetDocumentList(opt *OptionGetDocumentList) (documentList []Do
 
 	if l := len(opt.IsRecommend); l == 1 {
 		if opt.IsRecommend[0] {
-			db = db.Where("d.`recommend_at` IS NOT NULL")
+			db = db.Where("d.recommend_at IS NOT NULL")
 		} else {
-			db = db.Where("d.`recommend_at` IS NULL")
+			db = db.Where("d.recommend_at IS NULL")
 		}
 	}
 
 	if opt.FeeType != "" {
 		switch opt.FeeType {
 		case "free":
-			db = db.Where("d.`price` = ?", 0)
+			db = db.Where("d.price = ?", 0)
 		case "charge":
-			db = db.Where("d.`price` > ?", 0)
+			db = db.Where("d.price > ?", 0)
 		}
 	}
 

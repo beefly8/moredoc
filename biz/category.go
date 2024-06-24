@@ -131,7 +131,7 @@ func (s *CategoryAPIService) ListCategory(ctx context.Context, req *pb.ListCateg
 		QueryIn:      make(map[string][]interface{}),
 		SelectFields: req.Field,
 		Page:         int(req.Page),
-		Size:         int(req.Size_),
+		Size:         int(req.Size()),
 	}
 
 	if len(req.ParentId) > 0 {

@@ -335,7 +335,7 @@ func (m *DBModel) loopCovertDocument() {
 	// 清空缓存目录
 	os.RemoveAll("cache/convert")
 	convertDocumentRunning = true
-	sleep := 10 * time.Second
+	sleep := 60 * time.Second
 	m.db.Model(&Document{}).Where("status = ?", DocumentStatusConverting).Update("status", DocumentStatusPending)
 	for {
 		now := time.Now()
@@ -788,6 +788,6 @@ func (m *DBModel) checkAndStartSSR() {
 			}()
 		}
 		// 间隔2秒检测
-		time.Sleep(2 * time.Second)
+		time.Sleep(60 * time.Second)
 	}
 }

@@ -184,7 +184,7 @@ func (m *DBModel) GetCategoryByParentIdTitle(parentId int64, title string, typ i
 		db = db.Select(fields)
 	}
 
-	db = db.Where("parent_id = ? and title = ? and `type`=?", parentId, title, typ)
+	db = db.Where("parent_id = ? and title = ? and type = ?", parentId, title, typ)
 
 	err = db.First(&category).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
