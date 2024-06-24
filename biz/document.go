@@ -69,6 +69,7 @@ func (s *DocumentAPIService) CreateDocument(ctx context.Context, req *pb.CreateD
 	attachments, _, _ := s.dbModel.GetAttachmentList(&model.OptionGetAttachmentList{
 		Ids:     attachmentIds,
 		QueryIn: map[string][]interface{}{"user_id": {userClaims.UserId}},
+		Size:    10,
 	})
 	if len(attachments) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "文档文件参数attachment_id不正确")

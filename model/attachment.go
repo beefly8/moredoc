@@ -129,7 +129,7 @@ func (m *DBModel) GetAttachment(id int64, fields ...string) (attachment Attachme
 
 type OptionGetAttachmentList struct {
 	Page         int
-	Size         int
+	Size         int                       `default:10`
 	WithCount    bool                      // 是否返回总数
 	Ids          []interface{}             // id列表
 	SelectFields []string                  // 查询字段

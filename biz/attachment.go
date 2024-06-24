@@ -123,7 +123,7 @@ func (s *AttachmentAPIService) ListAttachment(ctx context.Context, req *pb.ListA
 
 	opt := &model.OptionGetAttachmentList{
 		Page:      int(req.Page),
-		Size:      int(req.Size_),
+		Size:      int(req.Size()),
 		WithCount: true,
 		QueryIn:   make(map[string][]interface{}),
 	}
