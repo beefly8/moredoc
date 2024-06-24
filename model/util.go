@@ -157,7 +157,7 @@ func (m *DBModel) InitSEO() {
 			// 处理js文件
 			if bs, e := os.ReadFile(path); e == nil {
 				content := string(bs)
-				content = strings.ReplaceAll(content, "e.settings.system.sitename||\"魔豆文库\"", "\""+cfg.Sitename+"\"")
+				content = strings.ReplaceAll(content, "e.settings.system.sitename||\"在线文库\"", "\""+cfg.Sitename+"\"")
 				os.WriteFile(path, []byte(content), os.ModePerm)
 			}
 		} else if ext == ".html" {
