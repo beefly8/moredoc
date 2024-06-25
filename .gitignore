@@ -24,3 +24,5 @@ license.cert
 /moredoc
 /dist
 ./.idea
+/.idea/*
+/.vscode
