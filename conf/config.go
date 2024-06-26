@@ -16,6 +16,7 @@ type Config struct {
 	Port        int // listent port
 	Database    Database
 	JWT         JWT
+	S3Store     S3Store
 }
 
 type Database struct {
@@ -30,4 +31,12 @@ type Database struct {
 type JWT struct {
 	Secret     string
 	ExpireDays int64
+}
+
+type S3Store struct {
+	Enable    bool
+	AccessKey string
+	SecretKey string
+	Bucket    string
+	Endpoint  string
 }

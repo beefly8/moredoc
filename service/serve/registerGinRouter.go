@@ -2,6 +2,7 @@ package serve
 
 import (
 	"moredoc/biz"
+	"moredoc/conf"
 	"moredoc/middleware/auth"
 	"moredoc/model"
 
@@ -10,8 +11,8 @@ import (
 )
 
 // RegisterGinRouter 注册gin路由
-func RegisterGinRouter(app *gin.Engine, dbModel *model.DBModel, logger *zap.Logger, auth *auth.Auth) (err error) {
-	attachmentAPIService := biz.NewAttachmentAPIService(dbModel, logger)
+func RegisterGinRouter(app *gin.Engine, dbModel *model.DBModel, logger *zap.Logger, auth *auth.Auth, cfg *conf.Config) (err error) {
+	attachmentAPIService := biz.NewAttachmentAPIService(dbModel, logger, &cfg.S3Store)
 
 	app.GET("/favicon.ico", attachmentAPIService.Favicon)
 	app.GET("/static/images/logo.png", attachmentAPIService.Logo)

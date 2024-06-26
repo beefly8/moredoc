@@ -31,7 +31,7 @@ var (
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "查看版本信息",
-	Long:  `查看魔豆文库版本信息，如版本号、构建时间、Git提交哈希值等。`,
+	Long:  `查看文库版本信息，如版本号、构建时间、Git提交哈希值等。`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("")
 		fmt.Println("AppName: ", "moredoc")

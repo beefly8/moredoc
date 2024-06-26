@@ -233,27 +233,27 @@ func (s *ConfigAPIService) GetEnvs(ctx context.Context, req *emptypb.Empty) (res
 	envs := []*pb.EnvDependent{
 		{
 			Name:        "LibreOffice",
-			Description: "LibreOffice是由文档基金会开发的自由及开放源代码的办公套件。魔豆文库用于将office等文档转为pdf。",
+			Description: "LibreOffice是由文档基金会开发的自由及开放源代码的办公套件。在线文库用于将office等文档转为pdf。",
 			Cmd:         "soffice",
 			IsRequired:  true,
 		},
 		{
 			Name:        "Calibre",
-			Description: "calibre是一个自由开源的电子书软件套装。魔豆文库用于将epub、mobi等电子书转为pdf。",
+			Description: "calibre是一个自由开源的电子书软件套装。在线文库用于将epub、mobi等电子书转为pdf。",
 			Cmd:         "ebook-convert",
 			IsRequired:  true,
 		},
 		{
 			// mupdf
 			Name:        "MuPDF",
-			Description: "MuPDF是一款以C语言编写的自由及开放源代码软件库，是PDF和XPS解析和渲染引擎。魔豆文库用于将PDF转为svg、png等图片。",
+			Description: "MuPDF是一款以C语言编写的自由及开放源代码软件库，是PDF和XPS解析和渲染引擎。在线文库用于将PDF转为svg、png等图片。",
 			Cmd:         "mutool",
 			IsRequired:  true,
 		},
 		{
 			// mupdf
 			Name:        "ImageMagick",
-			Description: "ImageMagick是一个用于创建、编辑、合成和转换位图图像的自由软件套件。魔豆文库用于将PDF转为svg、png、jpg等图片。",
+			Description: "ImageMagick是一个用于创建、编辑、合成和转换位图图像的自由软件套件。在线文库用于将PDF转为svg、png、jpg等图片。",
 			Cmd:         "convert",
 			IsRequired:  true,
 		},
@@ -266,18 +266,18 @@ func (s *ConfigAPIService) GetEnvs(ctx context.Context, req *emptypb.Empty) (res
 		},
 		{
 			Name:        "SVGO",
-			Description: "SVGO 是一个基于 Node.js 的工具，用于优化 SVG 矢量图形文件。魔豆文库用于压缩svg图片大小。",
+			Description: "SVGO 是一个基于 Node.js 的工具，用于优化 SVG 矢量图形文件。在线文库用于压缩svg图片大小。",
 			Cmd:         "svgo",
 			IsRequired:  false,
 		},
 		{
 			Name:        "PM2",
-			Description: "PM2是JavaScript运行时Node.js的进程管理器。用于做魔豆文库的系统守护进程。Windows下建议使用PM2。",
+			Description: "PM2是JavaScript运行时Node.js的进程管理器。用于做在线文库的系统守护进程。Windows下建议使用PM2。",
 			Cmd:         "pm2",
 			IsRequired:  false,
 		}, {
 			Name:        "Supervisor",
-			Description: "Supervisor是一个客户端/服务器系统，用于监视进程状态，当进程不再运行时自动重启它们。用于做魔豆文库的系统守护进程。Linux下建议使用Supervisor。",
+			Description: "Supervisor是一个客户端/服务器系统，用于监视进程状态，当进程不再运行时自动重启它们。用于做在线文库的系统守护进程。Linux下建议使用Supervisor。",
 			Cmd:         "supervisorctl",
 			IsRequired:  false,
 		},
@@ -301,7 +301,7 @@ func (s *ConfigAPIService) GetEnvs(ctx context.Context, req *emptypb.Empty) (res
 	//		Name:        "GroupBy",
 	//		IsRequired:  true,
 	//		IsInstalled: false, // 表示
-	//		Description: "魔豆文库的部分查询需要MySQL的group by功能，如果不支持，将导致部分功能无法正常使用和出错。",
+	//		Description: "在线文库的部分查询需要MySQL的group by功能，如果不支持，将导致部分功能无法正常使用和出错。",
 	//		Error: fmt.Sprintf(
 	//			`您当前MySQL数据库不支持 group by 查询，请修改数据库的 sql_mode 配置，去掉 ONLY_FULL_GROUP_BY。<br> 如将当前的 <br/>sql_mode=%s <br/>修改为<br/>sql_mode=%s`,
 	//			sqlMode, strings.ReplaceAll(sqlMode, "ONLY_FULL_GROUP_BY,", ""),

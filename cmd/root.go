@@ -46,8 +46,8 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "moredoc",
-	Short: "魔豆文库，文库系统解决方案",
-	Long:  `魔豆文库，使用Go语言开发的类似百度文库、新浪爱问文库的文库系统解决方案，支持 TXT、PDF、EPUB、MOBI、Office 等格式文档的在线预览与管理，为 dochub文库的重构版本。`,
+	Short: "文库系统解决方案",
+	Long:  `Go语言开发的类似百度文库、新浪爱问文库的文库系统解决方案，支持 TXT、PDF、EPUB、MOBI、Office 等格式文档的在线预览与管理`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

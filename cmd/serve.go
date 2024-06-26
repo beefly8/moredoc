@@ -24,7 +24,7 @@ import (
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "启动服务",
-	Long:  `启动魔豆文库程序服务，提供文档管理与预览。`,
+	Long:  `启动文库程序服务，提供文档管理与预览。`,
 	Run: func(cmd *cobra.Command, args []string) {
 		d, err := NewDaemon()
 		if err != nil {

@@ -3,7 +3,10 @@ package biz
 import (
 	"context"
 	"fmt"
+	"github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/credentials"
 	"mime/multipart"
+	"moredoc/conf"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -34,8 +37,11 @@ type ginResponse struct {
 
 type AttachmentAPIService struct {
 	pb.UnimplementedAttachmentAPIServer
-	dbModel *model.DBModel
-	logger  *zap.Logger
+	dbModel    *model.DBModel
+	logger     *zap.Logger
+	s3Client   *minio.Client
+	bucketName string
+	enableS3   bool
 }
 
 var errorHash = map[string]interface{}{
@@ -43,8 +49,43 @@ var errorHash = map[string]interface{}{
 	"message": "hash值必须32位",
 }
 
-func NewAttachmentAPIService(dbModel *model.DBModel, logger *zap.Logger) (service *AttachmentAPIService) {
-	return &AttachmentAPIService{dbModel: dbModel, logger: logger.Named("AttachmentAPIService")}
+func NewAttachmentAPIService(dbModel *model.DBModel, logger *zap.Logger, store *conf.S3Store) (service *AttachmentAPIService) {
+	var minioClient *minio.Client
+	var err error
+	if store != nil && store.Enable {
+		minioClient, err = minio.New(store.Endpoint, &minio.Options{
+			Creds:  credentials.NewStaticV4(store.AccessKey, store.SecretKey, ""),
+			Secure: false,
+		})
+		if err != nil {
+			zap.Error(err)
+			panic(err)
+		}
+		return &AttachmentAPIService{dbModel: dbModel, logger: logger.Named("AttachmentAPIService"), s3Client: minioClient, bucketName: store.Bucket, enableS3: true}
+	}
+	return &AttachmentAPIService{dbModel: dbModel, logger: logger.Named("AttachmentAPIService"), s3Client: nil, bucketName: store.Bucket, enableS3: false}
+
+}
+
+func (s *AttachmentAPIService) putObjectToS3(filePath, objectName string) {
+	ctx := context.Background()
+	contentType := "application/octet-stream"
+	info, err := s.s3Client.FPutObject(ctx, s.bucketName, objectName, filePath, minio.PutObjectOptions{ContentType: contentType})
+	if err != nil {
+		s.logger.Error("upload file to s3 store error", zap.Error(err))
+	}
+	s.logger.Debug(info.Location)
+
+}
+
+func (s *AttachmentAPIService) getObjectFromS3(fileName string, ext string) {
+	ctx := context.Background()
+	savePathFormat := "documents/%s/%s%s"
+	filePath := fmt.Sprintf(savePathFormat, strings.Join(strings.Split(fileName, "")[0:5], "/"), fileName, ext)
+	err := s.s3Client.FGetObject(ctx, s.bucketName, fileName, filePath, minio.GetObjectOptions{})
+	if err != nil {
+		s.logger.Error("get file to s3 store error", zap.Error(err))
+	}
 }
 
 // checkPermission 检查用户权限
@@ -298,6 +339,11 @@ func (s *AttachmentAPIService) DownloadDocument(ctx *gin.Context) {
 	}
 
 	filename := ctx.Query("filename")
+
+	//从s3下载文件到服务器本地，然后返回。
+	if s.enableS3 {
+		s.getObjectFromS3(claims.Id, filepath.Ext(filename))
+	}
 	file := fmt.Sprintf("documents/%s/%s%s", strings.Join(strings.Split(claims.Id, "")[:5], "/"), claims.Id, filepath.Ext(filename))
 	ctx.FileAttachment(file, filename)
 }
@@ -453,6 +499,9 @@ func (s *AttachmentAPIService) saveFile(ctx *gin.Context, fileHeader *multipart.
 	if err != nil {
 		s.logger.Error("Rename", zap.Error(err), zap.String("cachePath", cachePath), zap.String("savePath", savePath))
 		return
+	}
+	if s.enableS3 {
+		s.putObjectToS3(savePath, md5hash)
 	}
 
 	attachment = &model.Attachment{

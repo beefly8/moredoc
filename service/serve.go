@@ -94,13 +94,13 @@ func Run(cfg *conf.Config, logger *zap.Logger) {
 	)
 
 	endpoint := fmt.Sprintf("localhost:%v", cfg.Port)
-	err = serve.RegisterGRPCService(dbModel, logger, endpoint, auth, grpcServer, gwmux, dialOpts...)
+	err = serve.RegisterGRPCService(cfg, dbModel, logger, endpoint, auth, grpcServer, gwmux, dialOpts...)
 	if err != nil {
 		logger.Fatal("registerAPIService", zap.Error(err))
 		return
 	}
 
-	serve.RegisterGinRouter(app, dbModel, logger, auth)
+	serve.RegisterGinRouter(app, dbModel, logger, auth, cfg)
 
 	// 根目录访问静态文件，要放在 grpc 服务的前面
 	// 可以在 dist 目录下创建一个 index.html 文件并添加内容，然后访问 http://ip:port

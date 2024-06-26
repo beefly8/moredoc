@@ -4,6 +4,7 @@ import (
 	"context"
 	v1 "moredoc/api/v1"
 	"moredoc/biz"
+	"moredoc/conf"
 	"moredoc/middleware/auth"
 	"moredoc/model"
 
@@ -13,7 +14,7 @@ import (
 )
 
 // RegisterGRPCService 注册grpc服务
-func RegisterGRPCService(dbModel *model.DBModel, logger *zap.Logger, endpoint string, authMiddleWare *auth.Auth, grpcServer *grpc.Server, gwmux *runtime.ServeMux, dialOpts ...grpc.DialOption) (err error) {
+func RegisterGRPCService(cfg *conf.Config, dbModel *model.DBModel, logger *zap.Logger, endpoint string, authMiddleWare *auth.Auth, grpcServer *grpc.Server, gwmux *runtime.ServeMux, dialOpts ...grpc.DialOption) (err error) {
 	// 用户API接口服务
 	userAPIService := biz.NewUserAPIService(dbModel, logger, authMiddleWare)
 	v1.RegisterUserAPIServer(grpcServer, userAPIService)
@@ -42,7 +43,7 @@ func RegisterGRPCService(dbModel *model.DBModel, logger *zap.Logger, endpoint st
 	}
 
 	// 附件API接口服务
-	attachmentAPIService := biz.NewAttachmentAPIService(dbModel, logger)
+	attachmentAPIService := biz.NewAttachmentAPIService(dbModel, logger, &cfg.S3Store)
 	v1.RegisterAttachmentAPIServer(grpcServer, attachmentAPIService)
 	err = v1.RegisterAttachmentAPIHandlerFromEndpoint(context.Background(), gwmux, endpoint, dialOpts)
 	if err != nil {
