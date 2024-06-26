@@ -14,6 +14,9 @@ import (
 func RegisterGinRouter(app *gin.Engine, dbModel *model.DBModel, logger *zap.Logger, auth *auth.Auth, cfg *conf.Config) (err error) {
 	attachmentAPIService := biz.NewAttachmentAPIService(dbModel, logger, &cfg.S3Store)
 
+	//开启自动清除本地文件
+	go attachmentAPIService.AutoCleanAttachment()
+
 	app.GET("/favicon.ico", attachmentAPIService.Favicon)
 	app.GET("/static/images/logo.png", attachmentAPIService.Logo)
 	app.GET("/sitemap.xml", func(ctx *gin.Context) {

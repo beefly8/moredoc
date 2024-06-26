@@ -88,6 +88,39 @@ func (s *AttachmentAPIService) getObjectFromS3(fileName string, ext string) {
 	}
 }
 
+func (s *AttachmentAPIService) AutoCleanAttachment() {
+	for {
+		recursiveDirTraversal("documents/")
+		time.Sleep(time.Second * 60)
+	}
+}
+func visit(path string, info os.FileInfo, err error) error {
+	if err != nil {
+		fmt.Printf("Error accessing path %s: %v\n", path, err)
+		return err
+	}
+	//删除三天前的文件
+	if !info.IsDir() {
+
+		if time.Now().Sub(info.ModTime()).Hours() > 72 {
+			err := os.Remove(path)
+			if err != nil {
+				fmt.Printf("Error deleting file: %v\n", err)
+			}
+		}
+	}
+	return nil
+}
+
+func recursiveDirTraversal(root string) error {
+	err := filepath.Walk(root, visit)
+	if err != nil {
+		fmt.Printf("Error walking the path %s: %v\n", root, err)
+		return err
+	}
+	return nil
+}
+
 // checkPermission 检查用户权限
 func (s *AttachmentAPIService) checkPermission(ctx context.Context) (userClaims *auth.UserClaims, err error) {
 	return checkGRPCPermission(s.dbModel, ctx)
@@ -340,11 +373,14 @@ func (s *AttachmentAPIService) DownloadDocument(ctx *gin.Context) {
 
 	filename := ctx.Query("filename")
 
+	file := fmt.Sprintf("documents/%s/%s%s", strings.Join(strings.Split(claims.Id, "")[:5], "/"), claims.Id, filepath.Ext(filename))
 	//从s3下载文件到服务器本地，然后返回。
 	if s.enableS3 {
-		s.getObjectFromS3(claims.Id, filepath.Ext(filename))
+		//文件不存在从S3下载，避免每次都远程下载
+		if _, err := os.Stat(file); os.IsNotExist(err) {
+			s.getObjectFromS3(claims.Id, filepath.Ext(filename))
+		}
 	}
-	file := fmt.Sprintf("documents/%s/%s%s", strings.Join(strings.Split(claims.Id, "")[:5], "/"), claims.Id, filepath.Ext(filename))
 	ctx.FileAttachment(file, filename)
 }
 
