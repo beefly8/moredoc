@@ -89,9 +89,11 @@ func (s *AttachmentAPIService) getObjectFromS3(fileName string, ext string) {
 }
 
 func (s *AttachmentAPIService) AutoCleanAttachment() {
-	for {
-		recursiveDirTraversal("documents/")
-		time.Sleep(time.Second * 60)
+	if s.enableS3 {
+		for {
+			recursiveDirTraversal("documents/")
+			time.Sleep(time.Second * 1800)
+		}
 	}
 }
 func visit(path string, info os.FileInfo, err error) error {

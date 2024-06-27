@@ -32,3 +32,11 @@ maxSizeMB = 10
 maxBackups = 10
 maxAgeDays = 30
 compress = true
+
+[s3store]
+# 存储类型，支持：local、s3
+enable = true
+endpoint = "10.10.1.160:17701"
+accessKey = "minioadmin"
+secretKey = "minioadmin"
+bucket = "wenku"
