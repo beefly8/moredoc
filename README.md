@@ -1,8 +1,7 @@
-![魔豆文库](docs/images/logo.png)
 
 目录
 
-- [MOREDOC - 魔豆文库](#intro)
+- [MOREDOC - 在线文库](#intro)
   - [技术栈](#stack)
   - [开源地址](#opensource)
   - [使用手册](#manual)
@@ -27,10 +26,6 @@
 
 <a name="intro"></a>
 
-# MOREDOC - 魔豆文库
-
-`moredoc` - 魔豆文库，由 深圳市摩枫网络科技(**M**orefun **N**etwork **T**echnology Co., **Ltd**，https://mnt.ltd ) 使用 Golang 开发的类似[百度文库](https://wenku.baidu.com/)、[新浪爱问文库](http://ishare.iask.sina.com.cn/)的开源文库系统，支持 `TXT`、`PDF`、`EPUB`、`MOBI`、`Office` 等格式文档的在线预览与管理，为 `dochub文库`( [github](https://github.com/truthhun/dochub), [gitee](https://gitee.com/truthhun/DocHub) )的重构版本。
-
 <a name="stack"></a>
 
 ## 技术栈
@@ -39,105 +34,7 @@
 - Vue.js : nuxt2 + element-ui
 - Database : MySQL 5.7
 
-<a name="opensource"></a>
 
-## 开源地址
-
-- Github - https://github.com/mnt-ltd/moredoc
-- Gitee - https://gitee.com/mnt-ltd/moredoc
-- MNT.Ltd - https://git.mnt.ltd/mnt-ltd/moredoc
-
-**前端Web页面**
-
-- Github - https://github.com/mnt-ltd/moredoc-web
-- Gitee - https://gitee.com/mnt-ltd/moredoc-web
-- MNT.Ltd - https://git.mnt.ltd/mnt-ltd/moredoc-web
-
-<a name="manual"></a>
-
-## 使用手册
-
-关于魔豆文库安装部署以及使用和二次开发等更详细的教程，详见书栈网[《魔豆文库使用手册》](https://www.bookstack.cn/books/moredoc)
-
-<a name="demo"></a>
-
-## 演示站点
-
-- 网址：https://moredoc.mnt.ltd
-- 账号：admin
-- 密码：mnt.ltd
-
-> 演示站点，每天凌晨 1:00 ~ 6:00，每隔一小时重置一次全部数据
-
-<a name="wechatgroup"></a>
-
-## 微信交流群
-
-魔豆文库微信交流群，请添加`进击的皇虫`的微信，备注`魔豆文库加群`，以便进群。
-
-**微信二维码**
-
-![魔豆文库微信交流群](docs/images/wx-qrcode.jpeg)
-
-<a name="preview"></a>
-
-## 页面预览
-
-> 点击放大预览
-
-<br/>
-
-<a name="preview-index"></a>
-
-### 首页
-
-![魔豆文库首页](docs/images/index.png)
-
-<a name="preview-category"></a>
-
-### 列表页
-
-![魔豆文库列表页](docs/images/category.png)
-
-<a name="preview-read"></a>
-
-### 文档详情页
-
-![魔豆文库文档详情页](docs/images/read.png)
-
-<a name="preview-upload"></a>
-
-### 文档上传页
-
-![魔豆文库文档上传页](docs/images/upload.png)
-
-<a name="preview-search"></a>
-
-### 搜索结果页
-
-![魔豆文库搜索结果页](docs/images/search.png)
-
-<a name="preview-dashboard"></a>
-
-### 管理后台
-
-![魔豆文库管理后台](docs/images/dashboard.png)
-
-<a name="dev"></a>
-
-## 二次开发
-
-除了文件上传相关的接口，其他接口统一使用 proto 进行定义。
-
-<a name="dev-env"></a>
-
-### 环境要求
-
-- Golang 1.18+
-- Node.js 14.16.0 (可用 nvm 管理)
-- MySQL 5.7+
-
-**请自行配置相应环境。如在此过程中遇到错误，请根据错误提示自行通过 Google 或者百度解决。**
 
 <a name="dev-tree"></a>
 
@@ -280,9 +177,3 @@ make buildlinux
 开源版本基于 [Apache License 2.0](./LICENSE) 协议发布。
 
 <a name="thanks"></a>
-
-## 鸣谢
-
-感谢各开源项目为魔豆文库的开发奠定了基础。相关开源项目，后端依赖，详见 [go.mod](./go.mod)；前端依赖，详见 [web/package.json](./web/package.json)。
-
-魔豆文库 Logo 使用 [ 标小智 logosc.cn ](https://www.logosc.cn/?coupon=bookstack) 付费生成，效果不错，感谢。

@@ -172,9 +172,10 @@ type OptionGetConfigList struct {
 
 // GetConfigList 获取Config列表
 func (m *DBModel) GetConfigList(opt *OptionGetConfigList) (configList []Config, err error) {
-	db := m.db.Model(&Config{})
-	db = m.generateQueryIn(db, Config{}.TableName(), opt.QueryIn)
-	err = db.Order("sort asc").Find(&configList).Error
+	//db := m.db.Model(&Config{})
+	//db = m.generateQueryIn(db, Config{}.TableName(), opt.QueryIn)
+	err = m.db.Where("category in (?)", opt.QueryIn["category"]).Order("sort asc").Find(&configList).Error
+	//err = db.Where("category = ?", opt.QueryIn).Order("sort asc").Find(&configList).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		m.logger.Error("GetConfigList", zap.Error(err))
 	}
@@ -964,7 +965,7 @@ func (m *DBModel) initConfig() (err error) {
 		{Category: ConfigCategoryDisplay, Name: ConfigDisplayContactLink, ColNum: 24, Label: "联系我们跳转链接", Value: "", Placeholder: "全局右下角【固定栏】联系我们链接地址。不存在则不显示", InputType: InputTypeText, Sort: 130, Options: ""},
 
 		// 版本配置
-		{Category: ConfigCategoryRelease, Name: ConfigReleaseSource, Label: "版本检测来源", Value: "auto", InputType: InputTypeSelect, Sort: 10, Options: "none:不检测\nauto:自动检测\ngitee:Gitee\ngithub:GitHub"},
+		{Category: ConfigCategoryRelease, Name: ConfigReleaseSource, Label: "版本检测来源", Value: "none", InputType: InputTypeSelect, Sort: 10, Options: "none:不检测\nauto:自动检测\ngitee:Gitee\ngithub:GitHub"},
 		{Category: ConfigCategoryRelease, Name: ConfigReleaseTagName, Label: "最新版版本号", Value: "", InputType: InputTypeText, Sort: 20, Options: ""},
 		{Category: ConfigCategoryRelease, Name: ConfigReleaseName, Label: "版本发布名称", Value: "", InputType: InputTypeText, Sort: 30, Options: ""},
 		{Category: ConfigCategoryRelease, Name: ConfigReleaseBody, Label: "版本发布说明", Value: "", InputType: InputTypeTextarea, Sort: 40, Options: ""},
