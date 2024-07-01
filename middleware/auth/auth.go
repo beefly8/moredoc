@@ -97,7 +97,7 @@ func (p *Auth) CreateJWTToken(userId int64) (string, error) {
 		UUID:   uuid.Must(uuid.NewV1()).String(),
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime,
-			Issuer:    "moredoc",
+			Issuer:    "onlinedoc",
 			IssuedAt:  time.Now().Unix(),
 		},
 	}

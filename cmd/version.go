@@ -22,7 +22,7 @@ import (
 )
 
 var (
-	Version = "unknown"
+	Version = "v3.1.1"
 	GitHash = "unknown"
 	BuildAt = "unknown"
 )
@@ -34,7 +34,6 @@ var versionCmd = &cobra.Command{
 	Long:  `查看文库版本信息，如版本号、构建时间、Git提交哈希值等。`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("")
-		fmt.Println("AppName: ", "moredoc")
 		fmt.Println("Version: ", Version)
 		fmt.Println("BuildAt: ", BuildAt)
 		fmt.Println("GitHash: ", GitHash)
