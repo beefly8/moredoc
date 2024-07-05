@@ -177,3 +177,31 @@ make buildlinux
 开源版本基于 [Apache License 2.0](./LICENSE) 协议发布。
 
 <a name="thanks"></a>
+
+## Docker 使用方式
+### 创建三个存储卷
+````
+docker volume create mdoc_cache
+docker volume create mdoc_documents
+docker volume create mdoc_uploads
+````
+
+### 以挂载存储卷的方式启动服务实例
+```
+docker run -d -p 8880:8880 \
+-v mdoc_cache:/home/moredoc/cache \
+-v mdoc_documents:/home/moredoc/documents \
+-v mdoc_uploads:/home/moredoc/uploads \
+tongdoc:1.1
+```
+如果需要挂载配置文件，请添加配置文件的挂载配置，完整命令如下
+
+````
+docker run -d -p 8880:8880 \
+-v mdoc_cache:/home/moredoc/cache \
+-v mdoc_documents:/home/moredoc/documents \
+-v mdoc_uploads:/home/moredoc/uploads \
+-v [Your config base path]/app.toml:/home/moredoc/app.toml \
+tongdoc:1.1
+````
+请记得根据实际情况替换中括号中的内容

@@ -26,3 +26,4 @@ license.cert
 ./.idea
 /.idea/*
 /.vscode
+/.idea/dataSources.xml

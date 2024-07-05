@@ -506,7 +506,10 @@ func (s *AttachmentAPIService) uploadImage(ctx *gin.Context, attachmentType int)
 // 同时，返回附件信息
 func (s *AttachmentAPIService) saveFile(ctx *gin.Context, fileHeader *multipart.FileHeader, isDocument ...bool) (attachment *model.Attachment, err error) {
 	cacheDir := fmt.Sprintf("cache/uploads/%s", time.Now().Format("2006/01/02"))
-	os.MkdirAll(cacheDir, os.ModePerm)
+	err = os.MkdirAll(cacheDir, os.ModePerm)
+	if err != nil {
+		s.logger.Error("======================" + err.Error())
+	}
 	ext := strings.ToLower(filepath.Ext(fileHeader.Filename))
 	cachePath := fmt.Sprintf("%s/%s%s", cacheDir, uuid.Must(uuid.NewV1()).String(), ext)
 	defer func() {
