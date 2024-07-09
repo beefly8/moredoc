@@ -61,6 +61,8 @@ func NewAttachmentAPIService(dbModel *model.DBModel, logger *zap.Logger, store *
 			zap.Error(err)
 			panic(err)
 		}
+		dbModel.SetS3Client(minioClient)
+		dbModel.SetBucketName(store.Bucket)
 		return &AttachmentAPIService{dbModel: dbModel, logger: logger.Named("AttachmentAPIService"), s3Client: minioClient, bucketName: store.Bucket, enableS3: true}
 	}
 	return &AttachmentAPIService{dbModel: dbModel, logger: logger.Named("AttachmentAPIService"), s3Client: nil, bucketName: store.Bucket, enableS3: false}

@@ -3,8 +3,10 @@ package model
 import (
 	"bytes"
 	"compress/gzip"
+	"context"
 	"errors"
 	"fmt"
+	"github.com/minio/minio-go/v7"
 	"io"
 	"moredoc/util"
 	"moredoc/util/converter"
@@ -263,6 +265,13 @@ func (m *DBModel) cronCleanInvalidAttachment() {
 				if err := os.Remove(file); err != nil {
 					m.logger.Error("cronCleanInvalidAttachment", zap.Error(err), zap.String("file", file))
 				}
+				if m.GetS3Client() != nil {
+					err := m.GetS3Client().RemoveObject(context.Background(), m.GetBucketName(), attachemnt.Hash, minio.RemoveObjectOptions{})
+					if err != nil {
+						m.logger.Error("remove file from s3 store error : ", zap.Error(err), zap.String("file", file))
+					}
+				}
+
 				if attachemnt.Type == AttachmentTypeDocument { // 删除文档的衍生文件
 					folder := strings.TrimSuffix(file, filepath.Ext(file))
 					m.logger.Debug("cronCleanInvalidAttachment", zap.String("folder", folder))

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/minio/minio-go/v7"
 	"moredoc/conf"
 	"strings"
 	"sync"
@@ -62,6 +63,24 @@ type DBModel struct {
 	invalidToken   sync.Map // map[tokenUUID]struct{} 存在，未过期但无效token，比如读者退出登录后的token
 	ctx            context.Context
 	cfg            *conf.Database
+	s3Client       *minio.Client
+	bucketName     string
+}
+
+func (d *DBModel) SetBucketName(name string) {
+	d.bucketName = name
+}
+
+func (d *DBModel) GetBucketName() string {
+	return d.bucketName
+}
+
+func (d *DBModel) SetS3Client(v *minio.Client) {
+	d.s3Client = v
+}
+
+func (d *DBModel) GetS3Client() *minio.Client {
+	return d.s3Client
 }
 
 func NewDBModel(cfg *conf.Database, lg *zap.Logger) (m *DBModel, err error) {
