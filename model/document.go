@@ -207,14 +207,14 @@ type OptionGetDocumentList struct {
 
 // GetDocumentList 获取Document列表
 func (m *DBModel) GetDocumentList(opt *OptionGetDocumentList) (documentList []Document, total int64, err error) {
-	tableDocument := Document{}.TableName() + " d"
+	tableDocument := Document{}.TableName() + " "
 	db := m.db.Unscoped().Table(tableDocument)
 	if opt.IsRecycle {
 		// 回收站模式，只根据删除的倒序排序
-		opt.Sort = []string{"d.deleted_at desc"}
-		db = db.Where("d.deleted_at IS NOT NULL")
+		opt.Sort = []string{"mnt_document.deleted_at desc"}
+		db = db.Where("mnt_document.deleted_at IS NOT NULL")
 	} else {
-		db = db.Where("d.deleted_at IS NULL")
+		db = db.Where("mnt_document.deleted_at IS NULL")
 	}
 
 	m.logger.Debug("GetDocumentList", zap.Any("opt", opt))
@@ -223,33 +223,34 @@ func (m *DBModel) GetDocumentList(opt *OptionGetDocumentList) (documentList []Do
 	db = m.generateQueryLike(db, tableDocument, opt.QueryLike)
 	db = m.generateQueryRange(db, tableDocument, opt.QueryRange)
 	if len(opt.Ids) > 0 {
-		db = db.Where("d.id in (?)", opt.Ids)
+		db = db.Where("mnt_document.id in (?)", opt.Ids)
 	}
+	fmt.Println(db.Statement.SQL.String())
 
 	if categoryIds, ok := opt.QueryIn["category_id"]; ok && len(categoryIds) > 0 {
 		tableCategory := DocumentCategory{}.TableName()
-		db = db.Joins("left join "+tableCategory+" dc on dc.document_id = d.id").Where("dc.category_id in (?)", categoryIds)
+		db = db.Joins("left join "+tableCategory+" mnt_document_category on mnt_document_category.document_id = mnt_document.id").Where("mnt_document_category.category_id in (?)", categoryIds)
 	}
 
 	if l := len(opt.IsRecommend); l == 1 {
 		if opt.IsRecommend[0] {
-			db = db.Where("d.recommend_at IS NOT NULL")
+			db = db.Where("mnt_document.recommend_at IS NOT NULL")
 		} else {
-			db = db.Where("d.recommend_at IS NULL")
+			db = db.Where("mnt_document.recommend_at IS NULL")
 		}
 	}
 
 	if opt.FeeType != "" {
 		switch opt.FeeType {
 		case "free":
-			db = db.Where("d.price = ?", 0)
+			db = db.Where("mnt_document.price = ?", 0)
 		case "charge":
-			db = db.Where("d.price > ?", 0)
+			db = db.Where("mnt_document.price > ?", 0)
 		}
 	}
 
 	if opt.WithCount {
-		err = db.Group("d.id").Count(&total).Error
+		err = db.Group("id").Count(&total).Error
 		if err != nil {
 			m.logger.Error("GetDocumentList", zap.Error(err))
 			return
@@ -266,11 +267,11 @@ func (m *DBModel) GetDocumentList(opt *OptionGetDocumentList) (documentList []Do
 	if len(opt.Sort) > 0 {
 		db = m.generateQuerySort(db, tableDocument, opt.Sort)
 	} else {
-		db = db.Order("d.id desc")
+		db = db.Order("id desc")
 	}
 
 	db = db.Offset((opt.Page - 1) * opt.Size).Limit(opt.Size)
-	err = db.Group("d.id").Find(&documentList).Error
+	err = db.Find(&documentList).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		m.logger.Error("GetDocumentList", zap.Error(err))
 	}
@@ -579,7 +580,7 @@ func (m *DBModel) GetDocumentStatusConvertedByHash(hash []string) (hashMapDocume
 
 	hashMapDocuments = make(map[string]Document)
 	sql := fmt.Sprintf(
-		"select a.hash,a.type_id from %s a left join %s d on a.type_id = d.id where a.hash in ? and d.status = ? group by a.hash",
+		"select a.hash,a.type_id from %s a left join %s d on a.type_id = mnt_document.id where a.hash in ? and mnt_document.status = ? group by a.hash",
 		tableAttachment, tableDocument,
 	)
 

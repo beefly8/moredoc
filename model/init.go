@@ -269,7 +269,7 @@ func (m *DBModel) ShowTables() (tables []string, err error) {
 			m.logger.Error("ShowTables", zap.Error(err))
 		}
 	} else if m.cfg.Driver == "postgresql" {
-		err = m.db.Raw("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'").Scan(&tables).Error
+		err = m.db.Raw("SELECT table_name FROM information_schema.tables WHERE table_schema='moredoc' AND table_type='BASE TABLE'").Scan(&tables).Error
 		if err != nil {
 			m.logger.Error("ShowTables", zap.Error(err))
 		}
@@ -332,7 +332,7 @@ func (m *DBModel) FilterValidFields(tableName string, fields ...string) (validFi
 	alias := ""
 	slice := strings.Split(tableName, " ")
 	if len(slice) == 2 {
-		alias = slice[1] + "."
+		alias = tableName + "."
 		tableName = slice[0]
 	}
 	fieldsMap, ok := m.tableFieldsMap[tableName]
@@ -358,7 +358,7 @@ func (m *DBModel) GetTableFields(tableName string, ignoreField ...string) (field
 	alias := ""
 	if len(slice) == 2 {
 		tableName = slice[0]
-		alias = slice[1] + "."
+		alias = tableName + "."
 	}
 	fieldsMap, ok := m.tableFieldsMap[tableName]
 	if ok {
@@ -393,7 +393,7 @@ func (m *DBModel) showTableColumn(tableName string) (columns []TableColumn, err 
 		}
 		return
 	} else if m.cfg.Driver == "postgresql" {
-		err = m.db.Raw("SELECT column_name, udt_name as column_type, collation_name, is_nullable,is_identity as key,column_default,is_generated as extra ,is_updatable as privileges ,'NULL' as column_comment FROM information_schema.columns WHERE table_name = '" + tableName + "' AND table_schema = 'public'").Find(&columns).Error
+		err = m.db.Raw("SELECT column_name as Field, udt_name as Type, collation_name as Collation, is_nullable,is_identity as key,column_default,is_generated as extra ,is_updatable as privileges ,'NULL' as Comment FROM information_schema.columns WHERE table_name = '" + tableName + "' AND table_schema = 'moredoc'").Find(&columns).Error
 		if err != nil {
 			m.logger.Error("ShowTableColumn", zap.Error(err))
 		}
@@ -542,7 +542,7 @@ func (m *DBModel) generateQueryLike(db *gorm.DB, tableName string, queryLike map
 	slice := strings.Split(tableName, " ")
 	if len(slice) == 2 {
 		tableName = slice[0]
-		alias = slice[1] + "."
+		alias = tableName + "."
 	}
 
 	if len(queryLike) > 0 {
@@ -571,7 +571,7 @@ func (m *DBModel) generateQueryRange(db *gorm.DB, tableName string, queryRange m
 	slice := strings.Split(tableName, " ")
 	if len(slice) == 2 {
 		tableName = slice[0]
-		alias = slice[1] + "."
+		alias = tableName + "."
 	}
 
 	for field, rangeValue := range queryRange {
@@ -600,7 +600,7 @@ func (m *DBModel) generateQueryIn(db *gorm.DB, tableName string, queryIn map[str
 	slice := strings.Split(tableName, " ")
 	if len(slice) == 2 {
 		tableName = slice[0]
-		alias = slice[1] + "."
+		alias = tableName + "."
 	}
 	for field, values := range queryIn {
 		fields := m.FilterValidFields(tableName, field)
@@ -618,7 +618,7 @@ func (m *DBModel) generateQuerySort(db *gorm.DB, tableName string, querySort []s
 	slice := strings.Split(tableName, " ")
 	if len(slice) == 2 {
 		tableName = slice[0]
-		alias = slice[1] + "."
+		alias = tableName + "."
 	}
 	for _, sort := range querySort {
 		slice := strings.Split(sort, " ")
