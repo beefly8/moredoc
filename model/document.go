@@ -250,7 +250,7 @@ func (m *DBModel) GetDocumentList(opt *OptionGetDocumentList) (documentList []Do
 	}
 
 	if opt.WithCount {
-		err = db.Group("id").Count(&total).Error
+		err = db.Group("mnt_document.id").Count(&total).Error
 		if err != nil {
 			m.logger.Error("GetDocumentList", zap.Error(err))
 			return
