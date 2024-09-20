@@ -333,34 +333,34 @@ type OptionGetArticleList struct {
 
 // GetArticleList 获取Article列表
 func (m *DBModel) GetArticleList(opt *OptionGetArticleList) (articleList []Article, total int64, err error) {
-	tableName := Article{}.TableName() + " a"
+	tableName := Article{}.TableName() + " mnt_article"
 	db := m.db.Table(tableName).Unscoped()
 	db = m.generateQueryRange(db, tableName, opt.QueryRange)
 	db = m.generateQueryIn(db, tableName, opt.QueryIn)
 	db = m.generateQueryLike(db, tableName, opt.QueryLike)
 
 	if len(opt.Ids) > 0 {
-		db = db.Where("a.id in (?)", opt.Ids)
+		db = db.Where("mnt_article.id in (?)", opt.Ids)
 	}
 
 	if categoryIds, ok := opt.QueryIn["category_id"]; ok && len(categoryIds) > 0 {
 		tableCategory := ArticleCategory{}.TableName()
-		db = db.Joins("left join "+tableCategory+" ac on ac.article_id = a.id").Where("ac.category_id in (?)", categoryIds)
+		db = db.Joins("left join "+tableCategory+" ac on ac.article_id = mnt_article.id").Where("ac.category_id in (?)", categoryIds)
 	}
 
 	if opt.IsRecycle {
-		db = db.Where("a.deleted_at is not null")
+		db = db.Where("mnt_article.deleted_at is not null")
 		// 回收站模式下，按删除时间倒序
-		opt.Sort = []string{"a.deleted_at desc"}
+		opt.Sort = []string{"mnt_article.deleted_at desc"}
 	} else {
-		db = db.Where("a.deleted_at is null")
+		db = db.Where("mnt_article.deleted_at is null")
 	}
 
 	if len(opt.IsRecommend) == 1 {
 		if opt.IsRecommend[0] {
-			db = db.Where("a.recommend_at is not null")
+			db = db.Where("mnt_article.recommend_at is not null")
 		} else {
-			db = db.Where("a.recommend_at is null")
+			db = db.Where("mnt_article.recommend_at is null")
 		}
 	}
 
@@ -376,13 +376,13 @@ func (m *DBModel) GetArticleList(opt *OptionGetArticleList) (articleList []Artic
 	if len(opt.SelectFields) > 0 {
 		db = db.Select(opt.SelectFields)
 	} else {
-		db = db.Select(m.GetTableFields(tableName, "a.content"))
+		db = db.Select(m.GetTableFields(tableName, "mnt_article.content"))
 	}
 
 	if len(opt.Sort) > 0 {
 		db = m.generateQuerySort(db, tableName, opt.Sort)
 	} else {
-		db = db.Order("a.id desc")
+		db = db.Order("mnt_article.id desc")
 	}
 
 	db = db.Offset((opt.Page - 1) * opt.Size).Limit(opt.Size)
