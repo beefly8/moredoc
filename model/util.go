@@ -496,7 +496,8 @@ func (m *DBModel) reconvertDocument(doc *Document, ext string) {
 
 	// 5. 删除缓存文件，删除原预览文件
 	for _, file := range oldSrcFiles {
-		os.Remove(file)
+		//os.Remove(file)
+		m.logger.Info("RM File", zap.String("path", file))
 	}
 }
 
