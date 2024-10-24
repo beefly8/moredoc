@@ -105,11 +105,14 @@ func visit(path string, info os.FileInfo, err error) error {
 	}
 	//删除三天前的文件
 	if !info.IsDir() {
-
 		if time.Now().Sub(info.ModTime()).Hours() > 72 {
-			err := os.Remove(path)
-			if err != nil {
-				fmt.Printf("Error deleting file: %v\n", err)
+			if strings.HasSuffix(path, ".webp") || strings.HasSuffix(path, ".png") {
+
+			} else {
+				err := os.Remove(path)
+				if err != nil {
+					fmt.Printf("Error deleting file: %v\n", err)
+				}
 			}
 		}
 	}
